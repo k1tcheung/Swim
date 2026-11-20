@@ -716,8 +716,9 @@
         scroll-behavior: auto !important
       }
     }
+
     /* 所有弹窗操作按钮采用相同间距和边框宽度，高度随内容自然确定。 */
-    .modal-actions > button {
+    .modal-actions>button {
       min-height: 0;
       margin: 6px 0;
       padding: 10px 12px;
@@ -729,7 +730,7 @@
       justify-content: center;
     }
 
-    .modal-actions > button.plain {
+    .modal-actions>button.plain {
       border-color: var(--border);
     }
 
@@ -741,7 +742,7 @@
       margin-top: 0;
     }
 
-    .modal-actions.user-choice-actions > button {
+    .modal-actions.user-choice-actions>button {
       width: 100%;
       margin: 0;
     }
@@ -821,7 +822,7 @@
         app.innerHTML = html;
       }
       function closeModal() { overlay.innerHTML = ''; modal = null; if (returnFocus && returnFocus.isConnected) returnFocus.focus(); }
-      function showModal(title,body,buttons='',handler=null,options={}){returnFocus=document.activeElement;modal={handler};overlay.innerHTML=`<div class="modal-mask"><section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title"><h2 id="modal-title" ${options.showTitle===false?'hidden':''}>${esc(title)}</h2>${body}<div id="modal-error" class="form-error" role="alert"></div><div class="modal-actions ${options.stacked?'user-choice-actions':''}">${options.showClose===false?'':'<button class="plain" data-modal="cancel">关闭</button>'}${buttons}</div></section></div>`;const first=overlay.querySelector('input:not([type=checkbox]),textarea,select,button');if(first)first.focus();}
+      function showModal(title, body, buttons = '', handler = null, options = {}) { returnFocus = document.activeElement; modal = { handler }; overlay.innerHTML = `<div class="modal-mask"><section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title"><h2 id="modal-title" ${options.showTitle === false ? 'hidden' : ''}>${esc(title)}</h2>${body}<div id="modal-error" class="form-error" role="alert"></div><div class="modal-actions ${options.stacked ? 'user-choice-actions' : ''}">${options.showClose === false ? '' : '<button class="plain" data-modal="cancel">关闭</button>'}${buttons}</div></section></div>`; const first = overlay.querySelector('input:not([type=checkbox]),textarea,select,button'); if (first) first.focus(); }
       const confirmButton = (s = '确认', danger = false) => `<button class="btn ${danger ? 'btn-danger' : 'btn-primary'}" data-modal="confirm">${esc(s)}</button>`;
       function confirmAction(title, body, fn, danger = false) { showModal(title, body, confirmButton(danger ? '确认删除' : '确认', danger), async () => { await fn(); closeModal(); }); }
       function configModal() {
@@ -902,7 +903,7 @@
       async function handleAction(button) {
         const a = button.dataset.action, x = current(), u = state.prefs.user;
         if (a === 'settings') return configModal(); if (a === 'sync') return syncNow(); if (a === 'export') return exportModal(); if (a === 'import') return importModal(); if (a === 'help') return helpModal(); if (a === 'card') return cardModal(); if (a === 'suspend') return suspendModal(); if (a === 'reset') return resetModal();
-        if (a === 'user') { return showModal('当前操作成员', '', Object.entries(NAMES).map(([key, name]) => <button class="btn btn-primary" data-modal="user" data-user="${key}"> ${name} </button>).join(''), null, { showTitle: false, showClose: false, stacked: true }) }
+        if(a==='user')return showModal('当前操作成员','',Object.entries(NAMES).map(([key,name])=>'<button class="btn btn-primary" data-modal="user" data-user="'+key+'">'+name+'</button>').join(''),null,{showTitle:false,showClose:false,stacked:true});
         if (a === 'theme') { await transact(next => { next.prefs.theme = { auto: 'dark', dark: 'light', light: 'auto' }[next.prefs.theme]; }); render(); return; }
         if (a === 'prev' || a === 'next') { viewMonth.setMonth(viewMonth.getMonth() + (a === 'prev' ? -1 : 1)); render(); return; }
         if (a === 'today' || a === 'double') { const people = a === 'double' ? ['A', 'B'] : [u], ops = people.filter(w => !x.checkins[w][today()]).map(w => op('checkin.set', { who: w, date: today(), present: true })); if (!ops.length) return toast('今天已经打卡'); await addOperations(ops); return toast('已保存在本机' + (canSync() ? '，正在尝试同步' : '')); }
