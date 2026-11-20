@@ -1,218 +1,930 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>游泳打卡记录</title>
-<style>
-:root{
-  --bg:#f2f6fa;
-  --card:#ffffff;
-  --text:#222;
-  --text2:#666;
-  --border:#eee;
-  --nicole:#2584ff;
-  --ice:#ff69b4;
-  --btn-green:#28a745;
-  --btn-yellow:#ffc107;
-  --btn-red:#dc3545;
-  --btn-primary:#2584ff;
-}
-.dark{
-  --bg:#121212;
-  --card:#1e1e1e;
-  --text:#eee;
-  --text2:#aaa;
-  --border:#333;
-}
-*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif}
-body{background:var(--bg);color:var(--text);padding:16px;padding-bottom:140px;transition:0.2s}
-.card{background:var(--card);border-radius:16px;padding:18px;margin-bottom:14px;box-shadow:0 2px 10px #00000018}
-.btn{border:none;border-radius:12px;padding:14px;font-size:17px;font-weight:600;margin:6px 0;cursor:pointer;color:#fff}
-.btn-sm{padding:8px 12px;font-size:14px}
-.btn-round{border-radius:999px}
-.btn-primary{background:var(--btn-primary)}
-.btn-warning{background:var(--btn-yellow);color:#222}
-.btn-danger{background:var(--btn-red)}
-.btn-green{background:var(--btn-green)}
-.btn-toggle{background:#6c757d}
-.btn:disabled{opacity:0.45;cursor:not-allowed}
-.row-flex{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.row-between{display:flex;justify-content:space-between;align-items:center}
-.info-line{padding:6px 0;font-size:15px}
-.section-title{font-size:17px;font-weight:600;margin:12px 0 8px}
-.calendar-wrap{overflow-x:auto}
-.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
-.cal-day{aspect-ratio:1/1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;border:1px solid var(--border);position:relative}
-.cal-day.clickable{cursor:pointer}
-.cal-day.nicole{background:#2584ff33;border-color:var(--nicole)}
-.cal-day.ice{background:#ff69b433;border-color:var(--ice)}
-.cal-day.both{background:linear-gradient(135deg,#2584ff33 0%,#2584ff33 49%,#ff69b433 50%,#ff69b433 100%);border-color:#888}
-.cal-day.disabled{opacity:0.25;cursor:not-allowed}
-.cal-header{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:4px}
-.cal-header>div{text-align:center;font-size:13px;color:var(--text2)}
-.cal-nav{display:flex;justify-content:space-around;align-items:center;margin-bottom:8px}
-.cal-nav button{padding:4px 8px}
-.user-popup{position:fixed;inset:0;background:#00000050;display:flex;align-items:center;justify-content:center;z-index:99}
-.user-popup-inner{background:var(--card);border-radius:16px;padding:20px;width:240px}
-.user-popup-item{padding:12px 0;text-align:center;font-size:18px;border-bottom:1px solid var(--border);cursor:pointer}
-.user-popup-item:last-child{border-bottom:none}
-.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:8px 0}
-.stat-item{border:1px solid var(--border);border-radius:12px;padding:10px;text-align:center}
-.stat-item>div:first-child{font-size:14px;color:var(--text2)}
-.stat-item>div:last-child{font-size:18px;font-weight:600;margin-top:4px}
-.action-row{display:flex;align-items:center;justify-content:center;gap:12px;margin:16px 0}
-.big-main{width:160px;height:160px;font-size:20px}
-.small-side{width:100px;height:100px;font-size:14px}
-input{width:100%;padding:12px;border:1px solid var(--border);background:var(--card);color:var(--text);border-radius:10px;margin:8px 0;font-size:16px}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>游泳打卡记录</title>
+  <style>
+    :root {
+      --bg: #f2f6fa;
+      --card: #ffffff;
+      --text: #222;
+      --text2: #666;
+      --border: #eee;
+      --nicole: #2584ff;
+      --ice: #ff69b4;
+      --btn-green: #28a745;
+      --btn-yellow: #ffc107;
+      --btn-red: #dc3545;
+      --btn-primary: #2584ff;
+    }
+
+    .dark {
+      --bg: #121212;
+      --card: #1e1e1e;
+      --text: #eee;
+      --text2: #aaa;
+      --border: #333;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      padding: 16px;
+      padding-bottom: 140px;
+      transition: 0.2s
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 14px;
+      box-shadow: 0 2px 10px #00000018
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 17px;
+      font-weight: 600;
+      margin: 6px 0;
+      cursor: pointer;
+      color: #fff
+    }
+
+    .btn-sm {
+      padding: 8px 12px;
+      font-size: 14px
+    }
+
+    .btn-round {
+      border-radius: 999px
+    }
+
+    .btn-primary {
+      background: var(--btn-primary)
+    }
+
+    .btn-warning {
+      background: var(--btn-yellow);
+      color: #222
+    }
+
+    .btn-danger {
+      background: var(--btn-red)
+    }
+
+    .btn-green {
+      background: var(--btn-green)
+    }
+
+    .btn-toggle {
+      background: #6c757d
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed
+    }
+
+    .row-flex {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .row-between {
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .info-line {
+      padding: 6px 0;
+      font-size: 15px
+    }
+
+    .section-title {
+      font-size: 17px;
+      font-weight: 600;
+      margin: 12px 0 8px
+    }
+
+    .calendar-wrap {
+      overflow-x: auto
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px
+    }
+
+    .cal-day {
+      aspect-ratio: 1/1;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      border: 1px solid var(--border);
+      position: relative
+    }
+
+    .cal-day.clickable {
+      cursor: pointer
+    }
+
+    .cal-day.nicole {
+      background: #2584ff33;
+      border-color: var(--nicole)
+    }
+
+    .cal-day.ice {
+      background: #ff69b433;
+      border-color: var(--ice)
+    }
+
+    .cal-day.both {
+      background: linear-gradient(135deg, #2584ff33 0%, #2584ff33 49%, #ff69b433 50%, #ff69b433 100%);
+      border-color: #888
+    }
+
+    .cal-day.disabled {
+      opacity: 0.25;
+      cursor: not-allowed
+    }
+
+    .cal-header {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+      margin-bottom: 4px
+    }
+
+    .cal-header>div {
+      text-align: center;
+      font-size: 13px;
+      color: var(--text2)
+    }
+
+    .cal-nav {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      margin-bottom: 8px
+    }
+
+    .cal-nav button {
+      padding: 4px 8px
+    }
+
+    .user-popup {
+      position: fixed;
+      inset: 0;
+      background: #00000050;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 99
+    }
+
+    .user-popup-inner {
+      background: var(--card);
+      border-radius: 16px;
+      padding: 20px;
+      width: 240px
+    }
+
+    .user-popup-item {
+      padding: 12px 0;
+      text-align: center;
+      font-size: 18px;
+      border-bottom: 1px solid var(--border);
+      cursor: pointer
+    }
+
+    .user-popup-item:last-child {
+      border-bottom: none
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin: 8px 0
+    }
+
+    .stat-item {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      text-align: center
+    }
+
+    .stat-item>div:first-child {
+      font-size: 14px;
+      color: var(--text2)
+    }
+
+    .stat-item>div:last-child {
+      font-size: 18px;
+      font-weight: 600;
+      margin-top: 4px
+    }
+
+    .action-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin: 16px 0
+    }
+
+    .big-main {
+      width: 160px;
+      height: 160px;
+      font-size: 20px
+    }
+
+    .small-side {
+      width: 100px;
+      height: 100px;
+      font-size: 14px
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      border-radius: 10px;
+      margin: 8px 0;
+      font-size: 16px
+    }
+  </style>
 </head>
+
 <body>
-<style>
-:root{color-scheme:light}.dark{color-scheme:dark}body{max-width:680px;margin:auto;padding:16px 16px 48px}button,input,select,textarea{font:inherit}button{touch-action:manipulation;min-height:44px}button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #2584ff;outline-offset:3px}.row-between{gap:12px;flex-wrap:wrap}.btn{font-size:15px}.btn-sm{min-height:44px}.subtle{color:var(--text2);font-size:13px;line-height:1.7}.status{display:flex;gap:10px;align-items:center;padding:12px;border:1px solid var(--border);border-radius:12px;margin:12px 0}.status-dot{width:9px;height:9px;border-radius:50%;background:#a07400;flex-shrink:0}.status-dot.ok{background:#218540}.status-main{flex:1;min-width:0}.plain{background:transparent;border:1px solid var(--border);color:var(--text);border-radius:10px;padding:8px 12px}.user-button{font-weight:700;font-size:19px}.cal-day{background:var(--card);color:var(--text);padding:0;min-width:0;min-height:36px;width:100%}.cal-day.disabled{opacity:.4}.cal-day.today{box-shadow:inset 0 0 0 2px var(--text)}.cal-nav{justify-content:space-between;gap:8px}.cal-nav button{background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:8px}.big-main{width:145px;height:145px}.small-side{width:95px;height:95px}.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px}.notice{padding:12px;border:1px solid #b68516;border-radius:12px;background:#ffc10712;margin-bottom:14px;font-size:13px;line-height:1.7}.suspend-row{padding:12px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px}.suspend-row:last-child{border-bottom:0}.modal-mask{position:fixed;inset:0;background:#0009;z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px;overflow-y:auto}.modal-panel{background:var(--card);color:var(--text);width:100%;max-width:490px;max-height:90dvh;max-height:90vh;overflow-y:auto;border-radius:16px;padding:22px;box-shadow:0 16px 70px #0005}.modal-panel h2{font-size:20px;margin:0 0 14px}.modal-panel p{line-height:1.7;margin:8px 0}.modal-panel label{display:block;font-size:14px;margin-top:12px}.modal-panel input,.modal-panel textarea,.modal-panel select{margin:6px 0}.modal-panel select{width:100%;padding:12px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:10px}.modal-panel textarea{width:100%;padding:12px;background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:10px;min-height:120px;font-family:ui-monospace,monospace;font-size:13px}.modal-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;margin-top:18px}.check-label{display:flex!important;gap:10px;align-items:center}.check-label input{width:20px;height:20px;flex-shrink:0}.form-error{color:#d93036;font-size:14px;line-height:1.7;margin-top:8px}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--text);color:var(--card);padding:12px 18px;border-radius:12px;z-index:2000;max-width:90vw;box-shadow:0 4px 20px #0004;text-align:center;font-size:14px}.stack-buttons{display:flex;gap:8px;flex-wrap:wrap}.stat-item>div:last-child{font-size:20px}.info-line{overflow-wrap:anywhere}input[type=file]{padding:8px}.app-heading{font-size:24px;margin:8px 0 4px;letter-spacing:-.5px}[hidden]{display:none!important}.top-bar{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin:8px 0 18px}.top-bar .app-heading{font-size:23px;line-height:1.3;margin:6px 0 0;flex:0 0 auto;min-width:0;white-space:nowrap}.top-tools{flex:0 1 220px;min-width:0}.top-actions{display:flex;justify-content:flex-end;gap:6px}.top-actions .plain{font-size:12px;padding:7px 10px;white-space:nowrap}.top-status{display:flex;justify-content:flex-end;align-items:flex-start;gap:6px;margin-top:6px;font-size:11px;color:var(--text2);line-height:1.5;text-align:right;overflow-wrap:anywhere}.top-status .status-dot{width:6px;height:6px;margin-top:5px}.footer-actions{display:flex;justify-content:space-around;align-items:center;gap:8px}.footer-actions .btn{font-size:13px;flex:1;padding:10px 6px;white-space:nowrap}.first-help{display:block;margin:0 auto 14px;font-size:13px}@media(max-width:380px){.top-bar{gap:8px}.top-bar .app-heading{font-size:19px}.top-tools{flex-basis:175px}.top-actions .plain{padding:6px 8px;font-size:11px}body{padding:12px}.card{padding:14px}.stat-grid{gap:6px}.stat-item{padding:8px}.cal-day{min-height:32px;font-size:13px}.big-main{width:130px;height:130px}.modal-panel{padding:18px}}@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
-</style>
-<div id="app" aria-busy="true"><div class="card"><h1 class="app-heading">游泳打卡记录</h1><p class="subtle">正在读取本机记录…</p></div></div>
-<div id="overlay"></div><div id="toast" class="toast" role="status" hidden></div>
-<script>
-/* Local-first swim tracker. Deploy this file as index.html on GitHub Pages.
-   GitHub credentials are entered at runtime and never bundled in backups.
-   The original implementation below is an inert archive, not executable. */
-(() => {
-'use strict';
-const NAMES={A:'Nicole',B:'冰淇淋'}, DB_NAME='swim_tracker_local_first_v2', STORE='state', FILE='swim-data.json';
-const MAX_DAYS=183, MAX_YEAR=4, MAX_BYTES=950000, MAX_OPS=10000;
-let db=null, state={cloud:[],pending:[],prefs:{user:'A',theme:'auto'},config:{owner:'',repo:'',branch:'main'},savedToken:'',device:''};
-let token='', ready=false, syncing=false, lastSync='', syncMessage='', statusKind='', durable=false, persistQueue=Promise.resolve(), editQueue=Promise.resolve();
-let viewMonth=new Date(new Date().getFullYear(),new Date().getMonth(),1), modal=null, returnFocus=null, syncTimer=null, retryTimer=null, toastTimer=null;
-const app=document.getElementById('app'), overlay=document.getElementById('overlay');
-const uid=()=>{if(globalThis.crypto&&crypto.randomUUID)return crypto.randomUUID();if(globalThis.crypto&&crypto.getRandomValues){const a=new Uint8Array(16);crypto.getRandomValues(a);return Array.from(a,x=>x.toString(16).padStart(2,'0')).join('');}throw new Error('浏览器不支持安全随机编号，请更新浏览器。');};
-const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-function dateText(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
-const today=()=>dateText(new Date());
-function day(s){if(typeof s!=='string'||!/^\d{4}-\d{2}-\d{2}$/.test(s))throw new Error('日期格式无效');const [y,m,d]=s.split('-').map(Number);if(y<1900||y>2200)throw new Error('日期年份须在 1900—2200 之间');const dt=new Date(y,m-1,d,12);if(dateText(dt)!==s)throw new Error('日期无效');return dt;}
-function addMonths(s,n){const d=day(s),last=d.getDate();d.setDate(1);d.setMonth(d.getMonth()+n);d.setDate(Math.min(last,new Date(d.getFullYear(),d.getMonth()+1,0).getDate()));return dateText(d);}
-function span(a,b){const x=day(a),y=day(b);return Math.round((Date.UTC(y.getFullYear(),y.getMonth(),y.getDate())-Date.UTC(x.getFullYear(),x.getMonth(),x.getDate()))/86400000);}
-function plusDays(s,n){const d=day(s);d.setDate(d.getDate()+n);return dateText(d);}
-function yearNo(start,s){let n=1;while(n<=400&&s>=addMonths(start,n*12))n++;return n;}
-function empty(){return {startDate:null,totalFee:0,checkins:{A:{},B:{}},suspends:{}};}
-function validateOp(o){
- if(!o||typeof o!=='object'||typeof o.id!=='string'||o.id.length<8||o.id.length>100||!['A','B'].includes(o.actor)||!Number.isFinite(o.ts)||!o.payload||typeof o.payload!=='object')throw new Error('记录结构无效');
- const p=o.payload;
- if(o.kind==='card.set'){day(p.startDate);if(!Number.isFinite(p.totalFee)||p.totalFee<0||p.totalFee>1e9)throw new Error('卡费无效');}
- else if(o.kind==='checkin.set'){day(p.date);if(!['A','B'].includes(p.who)||typeof p.present!=='boolean')throw new Error('打卡记录无效');}
- else if(o.kind==='suspend.add'){day(p.start);day(p.end);if(p.end<=p.start||span(p.start,p.end)>MAX_DAYS)throw new Error('停卡日期无效');if(typeof p.recordId!=='string'||p.recordId.length>100)throw new Error('停卡编号无效');}
- else if(o.kind==='suspend.delete'){if(typeof p.recordId!=='string'||p.recordId.length>100)throw new Error('停卡编号无效');}
- else if(o.kind!=='reset')throw new Error('不支持的记录类型');
- return {id:o.id,kind:o.kind,actor:o.actor,ts:o.ts,payload:JSON.parse(JSON.stringify(p))};
-}
-function validateOps(list){if(!Array.isArray(list)||list.length>MAX_OPS)throw new Error('记录数量或格式不支持');const seen=new Set();return list.map(validateOp).filter(o=>{if(seen.has(o.id))return false;seen.add(o.id);return true;});}
-function union(remote,local){const ids=new Set(remote.map(o=>o.id));return [...remote,...local.filter(o=>!ids.has(o.id)&&ids.add(o.id))];}
-function project(ops){let x=empty();for(const o of ops){const p=o.payload;if(o.kind==='reset')x=empty();else if(o.kind==='card.set'){x.startDate=p.startDate;x.totalFee=p.totalFee;}else if(o.kind==='checkin.set'){if(p.present)x.checkins[p.who][p.date]=true;else delete x.checkins[p.who][p.date];}else if(o.kind==='suspend.add')x.suspends[p.recordId]={id:p.recordId,start:p.start,end:p.end};else if(o.kind==='suspend.delete')delete x.suspends[p.recordId];}return x;}
-const allOps=()=>union(state.cloud,state.pending), current=()=>project(allOps());
-function summary(x){const sus=Object.values(x.suspends).sort((a,b)=>a.start.localeCompare(b.start));const days=sus.reduce((n,s)=>n+span(s.start,s.end),0);return {sus,days,expire:x.startDate?plusDays(addMonths(x.startDate,38),days):null};}
-function businessProblems(x){if(!x.startDate)return Object.keys(x.checkins.A).length||Object.keys(x.checkins.B).length||Object.keys(x.suspends).length?['已有记录但缺少开卡日期']:[];const r=summary(x),errs=[],counts={};if(r.days>MAX_DAYS)errs.push('合并后的停卡总天数超过 183 天');for(const s of r.sus){const y=yearNo(x.startDate,s.start);counts[y]=(counts[y]||0)+1;if(s.start<x.startDate)errs.push('有停卡早于开卡日期');if(counts[y]>MAX_YEAR)errs.push(`第 ${y} 卡周期停卡超过 4 次`);}for(let i=1;i<r.sus.length;i++)if(r.sus[i].start<r.sus[i-1].end)errs.push('有停卡日期重叠');for(const u of ['A','B'])for(const d of Object.keys(x.checkins[u]))if(d<x.startDate||d>r.expire||d>today())errs.push('有打卡日期超出当前可操作范围');return [...new Set(errs)];}
-function op(kind,payload){return {id:uid(),kind,actor:state.prefs.user,ts:Date.now(),payload};}
-function toast(s){const el=document.getElementById('toast');el.textContent=s;el.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.hidden=true,4200);}
-function saveState(next){const snapshot=JSON.parse(JSON.stringify(next));const work=persistQueue.catch(()=>{}).then(()=>new Promise((resolve,reject)=>{if(!db)return reject(new Error('本机存储不可用，未保存修改。请在正常浏览器中打开并允许网站存储。'));let tx;try{tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(snapshot,'main');tx.oncomplete=resolve;tx.onerror=()=>reject(new Error('本机保存失败：存储空间不足或网站存储被禁用。'));tx.onabort=()=>reject(new Error('本机保存被中止，修改未确认。'));}catch(e){reject(e);}}));persistQueue=work;return work;}
-function transact(fn){const task=editQueue.catch(()=>{}).then(async()=>{const next=JSON.parse(JSON.stringify(state));const result=fn(next);await saveState(next);state=next;return result;});editQueue=task;return task;}
-async function addOperations(ops,strict=true){ops=validateOps(ops);await transact(next=>{next.pending=union(next.pending,ops).filter(o=>!next.cloud.some(c=>c.id===o.id));const combined=union(next.cloud,next.pending);if(combined.length>MAX_OPS)throw new Error('操作历史已达上限，请先备份，不要清空待同步记录。');if(strict){const errs=businessProblems(project(combined));if(errs.length)throw new Error(errs.join('；'));}});render();scheduleSync();}
-function canSync(){return !!(token&&state.config.owner&&state.config.repo);}
-function deploymentOK(){return location.protocol==='https:'&&location.hostname.endsWith('.github.io');}
-function syncLine(){if(!durable)return '本机存储不可用：暂不能修改记录';if(syncing)return '正在合并同步…';if(!canSync())return `仅保存在本机${state.pending.length?' · '+state.pending.length+' 项待同步':''}`;if(syncMessage)return syncMessage;return state.pending.length?`已保存在本机 · ${state.pending.length} 项待同步`:'已同步'+(lastSync?' · '+lastSync:'');}
-function render(){
- const x=current(),r=summary(x),u=state.prefs.user,theme=state.prefs.theme;document.documentElement.classList.toggle('dark',theme==='dark'||theme==='auto'&&window.matchMedia('(prefers-color-scheme: dark)').matches);app.setAttribute('aria-busy',String(!ready));
- const count=w=>Object.keys(x.checkins[w]).length,month=w=>Object.keys(x.checkins[w]).filter(d=>d.slice(0,7)===today().slice(0,7)).length;
- let html=`<header class="top-bar"><h1 class="app-heading">游泳打卡记录</h1><div class="top-tools"><div class="top-actions"><button class="plain" data-action="settings" aria-label="GitHub 设置">GitHub 设置</button><button class="plain" data-action="sync" ${!canSync()||syncing||!durable?'disabled':''}>${syncing?'同步中':'同步'}</button></div><div class="top-status" role="status"><span class="status-dot ${canSync()&&!state.pending.length&&!syncMessage&&!syncing?'ok':''}"></span><span>${esc(syncLine())}</span></div></div></header>`;
- if(!durable)html+='<div class="notice">本机记录暂时无法保存，请检查浏览器存储权限。已有记录未被清空。</div>';
- html+=`<div class="card row-between"><button class="plain user-button" data-action="user">${NAMES[u]} ⇄</button><button class="plain" data-action="theme">外观：${{auto:'跟随系统',dark:'深色',light:'浅色'}[theme]}</button></div>`;
- if(!x.startDate)html+=`<div class="card"><div class="section-title">先录入开卡信息</div><p class="subtle">有效期按原规则：38 个月，再加停卡天数。卡费按每人填写。</p><button class="btn btn-primary" data-action="card" ${!durable?'disabled':''}>录入开卡信息</button></div>`;
- else{
- html+=`<div class="card"><div class="stat-grid"><div class="stat-item"><div>累计打卡</div><div>${count(u)} 次</div></div><div class="stat-item"><div>本月打卡</div><div>${month(u)} 次</div></div><div class="stat-item"><div>每次折算</div><div>${count(u)&&x.totalFee?Math.round(x.totalFee/count(u))+' 元':'—'}</div></div></div></div><div class="action-row"><button class="btn btn-primary btn-round big-main" data-action="today" ${!durable||today()<x.startDate||today()>r.expire?'disabled':''}>🏊 ${x.checkins[u][today()]?'今天已打卡':'今天打卡'}</button><button class="btn btn-warning btn-round small-side" data-action="double" ${!durable||today()<x.startDate||today()>r.expire?'disabled':''}>👥 双人打卡</button></div>`;
- if(today()>r.expire)html+='<div class="notice">卡片已到期。到期日当天仍可打卡。</div>';
- const y=viewMonth.getFullYear(),m=viewMonth.getMonth(),length=new Date(y,m+1,0).getDate();
- html+=`<div class="card"><div class="section-title">日历 · 点击日期补卡 / 删除</div><div class="cal-nav"><button data-action="prev" aria-label="上个月">←</button><strong>${y} 年 ${m+1} 月</strong><button data-action="next" aria-label="下个月">→</button></div><div class="cal-header">${['日','一','二','三','四','五','六'].map(s=>'<div>'+s+'</div>').join('')}</div><div class="calendar">${'<div></div>'.repeat(new Date(y,m,1).getDay())}`;
- for(let i=1;i<=length;i++){const ds=dateText(new Date(y,m,i)),a=!!x.checkins.A[ds],b=!!x.checkins.B[ds],enabled=durable&&ds>=x.startDate&&ds<=today()&&ds<=r.expire;html+=`<button class="cal-day ${a&&b?'both':a?'nicole':b?'ice':''} ${enabled?'clickable':'disabled'} ${ds===today()?'today':''}" data-action="day" data-date="${ds}" ${enabled?'':'disabled'} aria-label="${ds}，${a?'Nicole 已打卡，':''}${b?'冰淇淋已打卡，':''}操作 ${NAMES[u]}">${i}</button>`;}
- html+=`</div><div class="legend subtle"><span><i style="background:#2584ff"></i>Nicole</span><span><i style="background:#ff69b4"></i>冰淇淋</span><span>描边：今天</span></div></div><div class="card"><div class="row-between"><div class="section-title">停卡记录</div><button class="btn btn-warning btn-sm" data-action="suspend" ${!durable?'disabled':''}>新增停卡</button></div><p class="subtle">已用 ${r.days} / ${MAX_DAYS} 天 · 每卡周期最多 4 次<br>按原规则计算：结束日 − 开始日，同一天恢复不计停卡。</p>${r.sus.length?r.sus.map(s=>`<div class="suspend-row"><div>${esc(s.start)} → ${esc(s.end)}<div class="subtle">${span(s.start,s.end)} 天 · 第 ${yearNo(x.startDate,s.start)} 卡周期</div></div><button class="plain" data-action="delete-suspend" data-id="${esc(s.id)}" ${!durable?'disabled':''}>删除</button></div>`).join(''):'<p class="subtle">暂无停卡记录</p>'}</div><div class="card"><div class="info-line">Nicole ${count('A')} 次 / 冰淇淋 ${count('B')} 次</div><div class="info-line">有效期：${esc(x.startDate)} — ${esc(r.expire)}</div><div class="info-line">已开卡 ${Math.max(0,span(x.startDate,today()))} 天 · 剩余 ${Math.max(0,span(today(),r.expire))} 天</div><div class="info-line">每人卡费：${x.totalFee} 元 · 双人总额 ${x.totalFee*2} 元</div><button class="plain" data-action="card" ${!durable?'disabled':''}>编辑开卡信息</button></div>`;
- const problems=businessProblems(x);if(problems.length)html+=`<div class="notice">合并后需要检查：${esc(problems.join('；'))}。请先导出备份，再修改相应记录。本机记录未被自动删除。</div>`;
- }
- if(!x.startDate)html+='<button class="plain first-help" data-action="help">使用说明</button>';
- html+=`<div class="card footer-actions"><button class="btn btn-sm btn-warning" data-action="import" ${!durable?'disabled':''}>📥导入JSON</button><button class="btn btn-sm btn-danger" data-action="reset" ${!durable?'disabled':''}>重置数据</button><button class="btn btn-sm btn-green" data-action="export">📤导出记录</button></div>`;
- app.innerHTML=html;
-}
-function closeModal(){overlay.innerHTML='';modal=null;if(returnFocus&&returnFocus.isConnected)returnFocus.focus();}
-function showModal(title,body,buttons='',handler=null){returnFocus=document.activeElement;modal={handler};overlay.innerHTML=`<div class="modal-mask"><section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title"><h2 id="modal-title">${esc(title)}</h2>${body}<div id="modal-error" class="form-error" role="alert"></div><div class="modal-actions"><button class="plain" data-modal="cancel">关闭</button>${buttons}</div></section></div>`;const first=overlay.querySelector('input:not([type=checkbox]),textarea,select,button');if(first)first.focus();}
-const confirmButton=(s='确认',danger=false)=>`<button class="btn ${danger?'btn-danger':'btn-primary'}" data-modal="confirm">${esc(s)}</button>`;
-function confirmAction(title,body,fn,danger=false){showModal(title,body,confirmButton(danger?'确认删除':'确认',danger),async()=>{await fn();closeModal();});}
-function configModal(){const c=state.config;showModal('GitHub 设置',`<label>GitHub 用户名<input id="cfg-owner" autocomplete="off" value="${esc(c.owner)}" placeholder="仓库拥有者的用户名"></label><label>私有数据仓库名称<input id="cfg-repo" autocomplete="off" value="${esc(c.repo)}" placeholder="例如 swim-private-data"></label><label>分支<input id="cfg-branch" autocomplete="off" value="${esc(c.branch)}"></label><label>GitHub Token<input id="cfg-token" type="password" autocomplete="new-password" spellcheck="false" placeholder="${token?'已配置；留空保持不变':'首次使用请在此输入'}"></label><label class="check-label"><input id="cfg-remember" type="checkbox" ${state.savedToken?'checked':''}>记住此设备上的 Token</label>`,`${token?'<button class="plain" data-modal="forget">移除本机 Token</button>':''}${confirmButton('保存设置')}`,async()=>{
- const owner=document.getElementById('cfg-owner').value.trim(),repo=document.getElementById('cfg-repo').value.trim(),branch=document.getElementById('cfg-branch').value.trim(),entered=document.getElementById('cfg-token').value.trim(),remember=document.getElementById('cfg-remember').checked;
- if(!/^[A-Za-z0-9-]{1,39}$/.test(owner)||!/^[A-Za-z0-9_.-]{1,100}$/.test(repo)||!branch||branch.length>200||/[\s\x00-\x1f]/.test(branch))throw new Error('请填写有效的用户名、仓库名和分支。');
- const nextToken=entered||token;if(!nextToken||/\s/.test(nextToken))throw new Error('请填写有效 Token。');if(syncing)throw new Error('正在同步，请完成后修改设置。');
- await transact(next=>{const changed=next.config.owner!==owner||next.config.repo!==repo||next.config.branch!==branch;if(changed){next.pending=union(next.cloud,next.pending);next.cloud=[];}next.config={owner,repo,branch};next.savedToken=remember?nextToken:'';});token=nextToken;syncMessage='';lastSync='';statusKind='';closeModal();render();toast('设置已保存在本机');scheduleSync();
- });}
-function makeExport(){const operations=allOps(),x=current();return JSON.stringify({schemaVersion:2,exportedAt:new Date().toISOString(),ops:operations,projection:{startDate:x.startDate,totalFee:x.totalFee,users:{A:{checkins:Object.keys(x.checkins.A).sort().map(date=>({date}))},B:{checkins:Object.keys(x.checkins.B).sort().map(date=>({date}))}},suspendRecords:summary(x).sus},pendingOperationIds:state.pending.map(o=>o.id)},null,2);}
-function exportModal(){const txt=makeExport();showModal('导出本机完整备份','<p class="subtle">包含两人的记录和未上传修改，不包含 Token 或仓库设置。下载失败可复制下方文本，另存为 .json 文件。</p><textarea id="backup-text" readonly aria-label="完整备份文本"></textarea>',`<button class="plain" data-modal="select-backup">全选文本</button><button class="btn btn-green" data-modal="download">下载 JSON</button>${navigator.share?'<button class="btn btn-primary" data-modal="share">系统分享</button>':''}`);document.getElementById('backup-text').value=txt;modal.backup=txt;}
-function downloadBackup(txt){const blob=new Blob([txt],{type:'application/json;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='swim-backup-'+today()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);toast('已请求下载；若浏览器未保存，请使用备份文本');}
-async function shareBackup(txt){if(!navigator.share)throw new Error('浏览器不支持系统分享，请下载或复制文本。');const file=new File([txt],'swim-backup-'+today()+'.json',{type:'application/json'});if(!navigator.canShare||!navigator.canShare({files:[file]}))throw new Error('浏览器不支持分享 JSON 文件，请下载或复制文本。');try{await navigator.share({files:[file],title:'游泳打卡备份'});}catch(e){if(e.name!=='AbortError')throw new Error('分享未完成，请下载或复制备份文本。');}}
-function importOps(raw){const parsed=JSON.parse(raw);if(parsed.schemaVersion===2)return validateOps(parsed.ops);if(!parsed||!parsed.users||!parsed.users.A||!parsed.users.B)throw new Error('不是支持的游泳备份格式。');const list=[];if(parsed.startDate)list.push(op('card.set',{startDate:parsed.startDate,totalFee:Number(parsed.totalFee||0)}));for(const who of ['A','B']){if(!Array.isArray(parsed.users[who].checkins))throw new Error('旧版打卡数据格式无效');for(const item of parsed.users[who].checkins){let ds=item.date;if(!ds){if(!Number.isFinite(item.ts))throw new Error('旧版时间戳无效');const dt=new Date(item.ts);if(!Number.isFinite(dt.getTime()))throw new Error('旧版日期无效');ds=dateText(dt);}list.push(op('checkin.set',{who,date:ds,present:true}));}}if(parsed.suspendRecords&&!Array.isArray(parsed.suspendRecords))throw new Error('旧版停卡记录无效');for(const s of parsed.suspendRecords||[])list.push(op('suspend.add',{recordId:'legacy-'+s.start+'-'+s.end,start:s.start,end:s.end}));return validateOps(list);}
-function importModal(){showModal('导入备份并合并','<p class="subtle">支持旧版和新版 JSON。新版按操作 ID 去重；旧版按人和日期合并，停卡需检查重复。备份的开卡设置及新版删除操作也会生效，不是单纯添加记录。</p><label>选择 JSON 文件<input type="file" id="import-file" accept=".json,application/json,text/plain"></label><label>或粘贴完整 JSON<textarea id="import-text" spellcheck="false"></textarea></label><label class="check-label"><input id="import-agree" type="checkbox">已导出当前备份，同意合并及其中的设置 / 删除操作</label>',confirmButton('导入并合并'),async()=>{
- if(!document.getElementById('import-agree').checked)throw new Error('请先确认已备份，并同意合并。');const file=document.getElementById('import-file').files[0];if(file&&file.size>MAX_BYTES*3)throw new Error('备份文件过大。');const raw=file?await file.text():document.getElementById('import-text').value.trim();if(!raw)throw new Error('请选择文件或粘贴文本。');const list=importOps(raw);if(!list.length)throw new Error('备份没有可导入的操作。');await addOperations(list,false);closeModal();toast('已合并到本机，联网后尝试同步；请检查停卡及开卡设置');
- });}
-function cardModal(){const x=current();showModal(x.startDate?'编辑开卡信息':'录入开卡信息',`<label>开卡日期<input type="date" id="card-date" value="${esc(x.startDate||today())}" min="1900-01-01" max="2200-12-31"></label><label>每人卡费（元）<input type="number" id="card-fee" inputmode="decimal" min="0" step="0.01" value="${x.totalFee||''}" placeholder="每人的卡费，不是双人总额"></label><p class="subtle">有效期按 38 个月加停卡天数计算。修改后会同步给另一台手机。</p>`,confirmButton('保存'),async()=>{const startDate=document.getElementById('card-date').value,raw=document.getElementById('card-fee').value;if(raw==='')throw new Error('请填写每人卡费，可填 0。');day(startDate);const totalFee=Number(raw);await addOperations([op('card.set',{startDate,totalFee})]);closeModal();toast('开卡信息已保存在本机');});}
-function suspendModal(){showModal('新增停卡',`<label>停卡开始日<input type="date" id="sus-start" value="${today()}"></label><label>恢复日 / 停卡结束日<input type="date" id="sus-end"></label><p class="subtle">天数按结束日减开始日计算。不能与已有停卡重叠，累计不超过 183 天，每卡周期不超过 4 次。</p>`,confirmButton('保存停卡'),async()=>{const start=document.getElementById('sus-start').value,end=document.getElementById('sus-end').value;day(start);day(end);if(end<=start)throw new Error('结束日必须晚于开始日。');await addOperations([op('suspend.add',{recordId:uid(),start,end})]);closeModal();toast('停卡已保存在本机');});}
-function resetModal(){showModal('清空两人的共享记录','<p>这不是只清空此手机：同步后会清空两个人的开卡、打卡和停卡记录。GitHub 提交历史仍可能保留旧记录。</p><p class="subtle">请先导出备份。清空操作也会进入待同步队列；另一台手机之后上传的离线修改仍可能重新出现。</p><label>输入“清空两人记录”确认<input id="reset-text" autocomplete="off"></label>',confirmButton('清空共享记录',true),async()=>{if(document.getElementById('reset-text').value!=='清空两人记录')throw new Error('请输入完整确认文字。');await addOperations([op('reset',{})],false);closeModal();toast('清空操作已保存在本机，等待同步');});}
-function helpModal(){showModal('使用说明',`<p><strong>先选自己的名字</strong><br>点击名字可以切换 Nicole / 冰淇淋。打卡前确认当前显示的是你。</p><p><strong>每天打卡</strong><br>点击“今天打卡”记录一次；每人每天最多一次。“双人打卡”给两人各记录一次，已经打卡的人不会重复增加。</p><p><strong>补卡与删除</strong><br>点击日历中的日期，为当前选中的人补卡或删除打卡，确认后生效。只能操作开卡日至今天之间、且在卡片有效期内的日期。蓝色代表 Nicole，粉色代表冰淇淋，双色代表两人都已打卡。</p><p><strong>停卡与有效期</strong><br>基础有效期为开卡后 38 个月，到期日当天仍可打卡。停卡天数会顺延有效期，按恢复日减开始日计算。累计最多 183 天，从开卡日起每个 12 个月周期最多 4 次，停卡日期不能重叠。删除停卡后，有效期会回退。</p><p><strong>查看费用和统计</strong><br>卡费填写每人的费用。每次折算为该人的卡费除以累计打卡次数，不是退款金额。本月次数按当前自然月统计。</p><p><strong>同步与备份</strong><br>修改先保存在手机，标题右侧可以查看同步状态。显示待同步时不要清理网页数据；联网后点击“同步”或下次打开网页再尝试。用“📤导出记录”保留备份，用“📥导入JSON”恢复并合并记录。</p><p><strong>重置需谨慎</strong><br>“重置数据”清空的是两人的共享记录，同步后另一台手机也会受到影响。先导出备份，再按提示确认。</p>`);}
-class SyncError extends Error{constructor(message,kind='retry'){super(message);this.kind=kind;}}
-function encode64(s){const bytes=new TextEncoder().encode(s);let binary='';for(let i=0;i<bytes.length;i+=8192)binary+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(binary);}
-function decode64(s){const binary=atob(s.replace(/\s/g,''));return new TextDecoder('utf-8',{fatal:true}).decode(Uint8Array.from(binary,c=>c.charCodeAt(0)));}
-async function request(path,method='GET',body=null){const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),15000);try{const res=await fetch('https://api.github.com'+path,{method,headers:{'Authorization':'Bearer '+token,'Accept':'application/vnd.github+json','X-GitHub-Api-Version':'2022-11-28',...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,cache:'no-store',signal:controller.signal});let value=null;try{value=await res.json();}catch(e){}return {status:res.status,ok:res.ok,value,retryAfter:res.headers.get('retry-after')};}catch(e){throw new SyncError(e.name==='AbortError'?'网络超时，修改仍保存在本机':'无法连接 GitHub，修改仍保存在本机');}finally{clearTimeout(timer);}}
-function failResponse(res){if(res.status===401)throw new SyncError('Token 无效或已过期，请在设置中更换','auth');if(res.status===403||res.status===429)throw new SyncError('GitHub 拒绝请求或已限流，请检查 Contents 权限，稍后手动重试','auth');if(res.status===404)throw new SyncError('找不到仓库或分支，请检查名称、Token 仓库授权及分支初始化','config');throw new SyncError('GitHub 请求失败（'+res.status+'），待同步修改已保留');}
-function parseCloud(raw){let data;try{data=JSON.parse(raw);}catch(e){throw new SyncError('云端 JSON 无法解析，未覆盖；请检查或恢复备份','data');}if(data.schemaVersion!==2||!Array.isArray(data.ops))throw new SyncError('云端文件不是新版同步格式，未覆盖；请先使用导入备份功能','data');try{return validateOps(data.ops);}catch(e){throw new SyncError('云端数据校验失败，未覆盖：'+e.message,'data');}}
-async function readCloud(base,branch){const res=await request(base+'/contents/'+FILE+'?ref='+encodeURIComponent(branch));if(res.status===404){const check=await request(base+'/branches/'+encodeURIComponent(branch));if(!check.ok)failResponse(check);return {ops:[],sha:null};}if(!res.ok)failResponse(res);if(!res.value||res.value.type!=='file'||res.value.encoding!=='base64'||!res.value.content||res.value.size>MAX_BYTES||!res.value.sha)throw new SyncError('云端数据文件过大或格式不支持，未覆盖','data');let raw;try{raw=decode64(res.value.content);}catch(e){throw new SyncError('云端文件编码无效，未覆盖','data');}return {ops:parseCloud(raw),sha:res.value.sha};}
-let approvedConflict='';
-function settingsConflict(remote,submitted){const local=submitted.filter(o=>o.kind==='card.set'),baseIds=new Set(state.cloud.map(o=>o.id)),remoteChanges=remote.filter(o=>(o.kind==='card.set'||o.kind==='reset')&&!baseIds.has(o.id)&&!submitted.some(p=>p.id===o.id));if(!local.length||!remoteChanges.length)return '';const a=local[local.length-1].payload,x=project(remote);if(a.startDate===x.startDate&&a.totalFee===x.totalFee)return '';return JSON.stringify({local:local.map(o=>o.id),remote:remoteChanges.map(o=>o.id)});}
-function scheduleSync(){clearTimeout(syncTimer);if(canSync()&&durable&&deploymentOK())syncTimer=setTimeout(()=>syncNow(),900);}
-async function syncNow(){
- if(syncing)return;if(!durable)return toast('本机存储不可用，不能安全同步');if(!canSync())return configModal();if(!deploymentOK())return toast('请部署到 HTTPS GitHub Pages 后再同步');if(!navigator.onLine){syncMessage='离线 · 修改保存在本机，联网后重试';render();return;}clearTimeout(retryTimer);syncing=true;syncMessage='';render();
- let needRetry=false;
- try{
- const c={...state.config},base='/repos/'+encodeURIComponent(c.owner)+'/'+encodeURIComponent(c.repo);await editQueue.catch(()=>{});
- const repoCheck=await request(base);if(!repoCheck.ok)failResponse(repoCheck);if(!repoCheck.value||repoCheck.value.private!==true)throw new SyncError('数据仓库必须设为私有；未上传任何记录。请使用单独的私有仓库','config');
- let completed=false;
- for(let attempt=0;attempt<3;attempt++){
- const remote=await readCloud(base,c.branch);await editQueue.catch(()=>{});const remoteIds=new Set(remote.ops.map(o=>o.id));const submitted=state.pending.filter(o=>!remoteIds.has(o.id));const conflict=settingsConflict(remote.ops,submitted);
- if(conflict&&conflict!==approvedConflict){showModal('开卡信息发生同步冲突',`<p>另一台手机已修改共享开卡信息，你的本机也有待上传修改。</p><p class="subtle">云端：${esc(project(remote.ops).startDate||'未开卡')}，每人 ${project(remote.ops).totalFee} 元<br>本机：${esc(current().startDate||'未开卡')}，每人 ${current().totalFee} 元</p><p>关闭将保留本机修改，不自动覆盖。确认后提交本机开卡设置；期间若云端再次变化，会重新确认。</p>`,confirmButton('确认提交本机设置'),async()=>{approvedConflict=conflict;closeModal();syncMessage='';await syncNow();});throw new SyncError('开卡设置冲突：请确认后继续同步','conflict');}
- await transact(next=>{next.cloud=remote.ops;next.pending=next.pending.filter(o=>!remoteIds.has(o.id));});
- const merged=union(remote.ops,submitted);let written=false;
- if(submitted.length){const problems=businessProblems(project(merged));if(problems.length)throw new SyncError('合并后需要检查：'+problems.join('；')+'。请先备份并修正，本机修改已保留','data');const raw=JSON.stringify({schemaVersion:2,updatedAt:new Date().toISOString(),ops:merged});if(merged.length>MAX_OPS||new TextEncoder().encode(raw).length>MAX_BYTES)throw new SyncError('云端操作历史达到安全上限，请先导出备份','data');const result=await request(base+'/contents/'+FILE,'PUT',{message:'Swim sync: '+submitted.length+' operation(s)',branch:c.branch,content:encode64(raw),...(remote.sha?{sha:remote.sha}:{})});if(result.status===409||result.status===422){await new Promise(resolve=>setTimeout(resolve,400*(attempt+1)));continue;}if(!result.ok)failResponse(result);written=true;}
- const acceptedIds=new Set((written?merged:remote.ops).map(o=>o.id));await transact(next=>{next.cloud=written?merged:remote.ops;next.pending=next.pending.filter(o=>!acceptedIds.has(o.id));});lastSync=new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'});syncMessage='';approvedConflict='';completed=true;break;
- }
- if(!completed)throw new SyncError('双方同时更新或分支拒绝写入，已保留本机修改，请稍后重试');
- }catch(e){syncMessage=e.message||'同步失败，修改已保存在本机';statusKind=e.kind||'retry';needRetry=statusKind==='retry';}
- finally{syncing=false;render();if(needRetry&&document.visibilityState==='visible')retryTimer=setTimeout(()=>syncNow(),60000);else if(!syncMessage&&state.pending.length)scheduleSync();}
-}
-async function handleAction(button){const a=button.dataset.action,x=current(),u=state.prefs.user;
- if(a==='settings')return configModal();if(a==='sync')return syncNow();if(a==='export')return exportModal();if(a==='import')return importModal();if(a==='help')return helpModal();if(a==='card')return cardModal();if(a==='suspend')return suspendModal();if(a==='reset')return resetModal();
- if(a==='user')return showModal('当前操作成员','<p class="subtle">此选择只保存在本机，不是登录认证。你们可以分别选择自己的名字。</p>',Object.entries(NAMES).map(([key,name])=>`<button class="btn btn-primary" data-modal="user" data-user="${key}">${name}</button>`).join(''));
- if(a==='theme'){await transact(next=>{next.prefs.theme={auto:'dark',dark:'light',light:'auto'}[next.prefs.theme];});render();return;}
- if(a==='prev'||a==='next'){viewMonth.setMonth(viewMonth.getMonth()+(a==='prev'?-1:1));render();return;}
- if(a==='today'||a==='double'){const people=a==='double'?['A','B']:[u],ops=people.filter(w=>!x.checkins[w][today()]).map(w=>op('checkin.set',{who:w,date:today(),present:true}));if(!ops.length)return toast('今天已经打卡');await addOperations(ops);return toast('已保存在本机'+(canSync()?'，正在尝试同步':''));}
- if(a==='day'){const date=button.dataset.date,present=!x.checkins[u][date];return confirmAction(present?'补卡':'删除打卡',`<p>${esc(NAMES[u])} · ${esc(date)}</p><p>${present?'确认添加这一天的打卡？':'确认删除这一天的打卡？删除也会同步给另一台手机。'}</p>`,async()=>{await addOperations([op('checkin.set',{who:u,date,present})],present);toast(present?'补卡已保存':'删除已保存');},!present);}
- if(a==='delete-suspend'){const id=button.dataset.id,s=x.suspends[id];if(!s)return;return confirmAction('删除停卡',`<p>${esc(s.start)} → ${esc(s.end)}</p><p>删除后有效期自动回退。如果已有打卡超出新有效期，页面会提示检查。</p>`,async()=>{await addOperations([op('suspend.delete',{recordId:id})],false);toast('停卡删除已保存');},true);}
-}
-document.addEventListener('click',async event=>{
- const mb=event.target.closest('[data-modal]');if(mb){const action=mb.dataset.modal;if(action==='cancel')return closeModal();if(action==='select-backup'){const el=document.getElementById('backup-text');el.focus();el.select();el.setSelectionRange(0,el.value.length);return;}if(action==='download')return downloadBackup(modal.backup);
- if(action==='share'){try{await shareBackup(modal.backup);}catch(e){document.getElementById('modal-error').textContent=e.message;}return;}
- mb.disabled=true;try{if(action==='confirm'&&modal.handler)await modal.handler();else if(action==='user'){await transact(next=>next.prefs.user=mb.dataset.user);closeModal();render();}else if(action==='forget'){if(syncing)throw new Error('请等同步结束后再移除 Token。');await transact(next=>next.savedToken='');token='';syncMessage='';closeModal();render();toast('本机 Token 已移除，记录未删除');}}catch(e){const el=document.getElementById('modal-error');if(el)el.textContent=e.message||'操作失败';}finally{if(mb.isConnected)mb.disabled=false;}return;}
- const b=event.target.closest('[data-action]');if(b&&!b.disabled){try{await handleAction(b);}catch(e){toast(e.message||'操作失败，原记录未清空');}}
-});
-document.addEventListener('keydown',e=>{if(!modal)return;if(e.key==='Escape'){e.preventDefault();closeModal();}if(e.key==='Tab'){const items=Array.from(overlay.querySelectorAll('button:not(:disabled),input:not(:disabled),textarea,select,[tabindex="0"]'));if(!items.length)return;const first=items[0],last=items[items.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}});
-window.addEventListener('online',()=>{syncMessage='';scheduleSync();});window.addEventListener('offline',()=>{syncMessage='离线 · 修改保存在本机';render();});document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')scheduleSync();else clearTimeout(retryTimer);});
-const media=window.matchMedia('(prefers-color-scheme: dark)');if(media.addEventListener)media.addEventListener('change',()=>ready&&render());else if(media.addListener)media.addListener(()=>ready&&render());
-async function init(){try{if(!globalThis.indexedDB)throw new Error('当前环境不支持 IndexedDB');db=await new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains(STORE))req.result.createObjectStore(STORE);};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(new Error('打开本机存储失败'));req.onblocked=()=>reject(new Error('存储被另一页面阻塞，请关闭其他标签后重试'));});db.onversionchange=()=>{db.close();durable=false;render();};const saved=await new Promise((resolve,reject)=>{const tx=db.transaction(STORE,'readonly'),req=tx.objectStore(STORE).get('main');req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(new Error('本机读取失败'));});if(saved){state={...state,...saved};state.cloud=validateOps(saved.cloud||[]);state.pending=validateOps(saved.pending||[]);if(!['A','B'].includes(state.prefs.user))state.prefs.user='A';if(!['auto','light','dark'].includes(state.prefs.theme))state.prefs.theme='auto';}if(!state.device)state.device=uid();await saveState(state);token=state.savedToken||'';durable=true;}catch(e){durable=false;syncMessage='本机数据未加载：'+e.message;console.warn('Local tracker initialization failed; stored records were not cleared.');}ready=true;render();scheduleSync();}
-init();
-})();
-</script>
-<script type="text/plain" id="previous-version">
+  <style>
+    :root {
+      color-scheme: light
+    }
+
+    .dark {
+      color-scheme: dark
+    }
+
+    body {
+      max-width: 680px;
+      margin: auto;
+      padding: 16px 16px 48px
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit
+    }
+
+    button {
+      touch-action: manipulation;
+      min-height: 44px
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible,
+    select:focus-visible {
+      outline: 3px solid #2584ff;
+      outline-offset: 3px
+    }
+
+    .row-between {
+      gap: 12px;
+      flex-wrap: wrap
+    }
+
+    .btn {
+      font-size: 15px
+    }
+
+    .btn-sm {
+      min-height: 44px
+    }
+
+    .subtle {
+      color: var(--text2);
+      font-size: 13px;
+      line-height: 1.7
+    }
+
+    .status {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin: 12px 0
+    }
+
+    .status-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #a07400;
+      flex-shrink: 0
+    }
+
+    .status-dot.ok {
+      background: #218540
+    }
+
+    .status-main {
+      flex: 1;
+      min-width: 0
+    }
+
+    .plain {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 10px;
+      padding: 8px 12px
+    }
+
+    .user-button {
+      font-weight: 700;
+      font-size: 19px
+    }
+
+    .cal-day {
+      background: var(--card);
+      color: var(--text);
+      padding: 0;
+      min-width: 0;
+      min-height: 36px;
+      width: 100%
+    }
+
+    .cal-day.disabled {
+      opacity: .4
+    }
+
+    .cal-day.today {
+      box-shadow: inset 0 0 0 2px var(--text)
+    }
+
+    .cal-nav {
+      justify-content: space-between;
+      gap: 8px
+    }
+
+    .cal-nav button {
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px
+    }
+
+    .big-main {
+      width: 145px;
+      height: 145px
+    }
+
+    .small-side {
+      width: 95px;
+      height: 95px
+    }
+
+    .legend {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-top: 12px
+    }
+
+    .legend i {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 3px;
+      margin-right: 4px
+    }
+
+    .notice {
+      padding: 12px;
+      border: 1px solid #b68516;
+      border-radius: 12px;
+      background: #ffc10712;
+      margin-bottom: 14px;
+      font-size: 13px;
+      line-height: 1.7
+    }
+
+    .suspend-row {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px
+    }
+
+    .suspend-row:last-child {
+      border-bottom: 0
+    }
+
+    .modal-mask {
+      position: fixed;
+      inset: 0;
+      background: #0009;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-y: auto
+    }
+
+    .modal-panel {
+      background: var(--card);
+      color: var(--text);
+      width: 100%;
+      max-width: 490px;
+      max-height: 90dvh;
+      max-height: 90vh;
+      overflow-y: auto;
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 16px 70px #0005
+    }
+
+    .modal-panel h2 {
+      font-size: 20px;
+      margin: 0 0 14px
+    }
+
+    .modal-panel p {
+      line-height: 1.7;
+      margin: 8px 0
+    }
+
+    .modal-panel label {
+      display: block;
+      font-size: 14px;
+      margin-top: 12px
+    }
+
+    .modal-panel input,
+    .modal-panel textarea,
+    .modal-panel select {
+      margin: 6px 0
+    }
+
+    .modal-panel select {
+      width: 100%;
+      padding: 12px;
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px
+    }
+
+    .modal-panel textarea {
+      width: 100%;
+      padding: 12px;
+      background: var(--card);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      min-height: 120px;
+      font-family: ui-monospace, monospace;
+      font-size: 13px
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      margin-top: 18px
+    }
+
+    .check-label {
+      display: flex !important;
+      gap: 10px;
+      align-items: center
+    }
+
+    .check-label input {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0
+    }
+
+    .form-error {
+      color: #d93036;
+      font-size: 14px;
+      line-height: 1.7;
+      margin-top: 8px
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--text);
+      color: var(--card);
+      padding: 12px 18px;
+      border-radius: 12px;
+      z-index: 2000;
+      max-width: 90vw;
+      box-shadow: 0 4px 20px #0004;
+      text-align: center;
+      font-size: 14px
+    }
+
+    .stack-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .stat-item>div:last-child {
+      font-size: 20px
+    }
+
+    .info-line {
+      overflow-wrap: anywhere
+    }
+
+    input[type=file] {
+      padding: 8px
+    }
+
+    .app-heading {
+      font-size: 24px;
+      margin: 8px 0 4px;
+      letter-spacing: -.5px
+    }
+
+    [hidden] {
+      display: none !important
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin: 8px 0 18px
+    }
+
+    .top-bar .app-heading {
+      font-size: 23px;
+      line-height: 1.3;
+      margin: 6px 0 0;
+      flex: 0 0 auto;
+      min-width: 0;
+      white-space: nowrap
+    }
+
+    .top-tools {
+      flex: 0 1 220px;
+      min-width: 0
+    }
+
+    .top-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 6px
+    }
+
+    .top-actions .plain {
+      font-size: 12px;
+      padding: 7px 10px;
+      white-space: nowrap
+    }
+
+    .top-status {
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-start;
+      gap: 6px;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text2);
+      line-height: 1.5;
+      text-align: right;
+      overflow-wrap: anywhere
+    }
+
+    .top-status .status-dot {
+      width: 6px;
+      height: 6px;
+      margin-top: 5px
+    }
+
+    .footer-actions {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      gap: 8px
+    }
+
+    .footer-actions .btn {
+      font-size: 13px;
+      flex: 1;
+      padding: 10px 6px;
+      white-space: nowrap
+    }
+
+    .first-help {
+      display: block;
+      margin: 0 auto 14px;
+      font-size: 13px
+    }
+
+    @media(max-width:380px) {
+      .top-bar {
+        gap: 8px
+      }
+
+      .top-bar .app-heading {
+        font-size: 19px
+      }
+
+      .top-tools {
+        flex-basis: 175px
+      }
+
+      .top-actions .plain {
+        padding: 6px 8px;
+        font-size: 11px
+      }
+
+      body {
+        padding: 12px
+      }
+
+      .card {
+        padding: 14px
+      }
+
+      .stat-grid {
+        gap: 6px
+      }
+
+      .stat-item {
+        padding: 8px
+      }
+
+      .cal-day {
+        min-height: 32px;
+        font-size: 13px
+      }
+
+      .big-main {
+        width: 130px;
+        height: 130px
+      }
+
+      .modal-panel {
+        padding: 18px
+      }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      * {
+        transition: none !important;
+        scroll-behavior: auto !important
+      }
+    }
+    /* 所有弹窗操作按钮采用相同间距和边框宽度，高度随内容自然确定。 */
+    .modal-actions > button {
+      min-height: 0;
+      margin: 6px 0;
+      padding: 10px 12px;
+      font-size: 14px;
+      line-height: 20px;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-actions > button.plain {
+      border-color: var(--border);
+    }
+
+    /* 成员选择：只显示两行按钮。 */
+    .modal-actions.user-choice-actions {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 10px;
+      margin-top: 0;
+    }
+
+    .modal-actions.user-choice-actions > button {
+      width: 100%;
+      margin: 0;
+    }
+  </style>
+  <div id="app" aria-busy="true">
+    <div class="card">
+      <h1 class="app-heading">游泳打卡记录</h1>
+      <p class="subtle">正在读取本机记录…</p>
+    </div>
+  </div>
+  <div id="overlay"></div>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script>
+    /* Local-first swim tracker. Deploy this file as index.html on GitHub Pages.
+       GitHub credentials are entered at runtime and never bundled in backups.
+       The original implementation below is an inert archive, not executable. */
+    (() => {
+      'use strict';
+      const NAMES = { A: 'Nicole', B: '冰淇淋' }, DB_NAME = 'swim_tracker_local_first_v2', STORE = 'state', FILE = 'swim-data.json';
+      const MAX_DAYS = 183, MAX_YEAR = 4, MAX_BYTES = 950000, MAX_OPS = 10000;
+      let db = null, state = { cloud: [], pending: [], prefs: { user: 'A', theme: 'auto' }, config: { owner: '', repo: '', branch: 'main' }, savedToken: '', device: '' };
+      let token = '', ready = false, syncing = false, lastSync = '', syncMessage = '', statusKind = '', durable = false, persistQueue = Promise.resolve(), editQueue = Promise.resolve();
+      let viewMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1), modal = null, returnFocus = null, syncTimer = null, retryTimer = null, toastTimer = null;
+      const app = document.getElementById('app'), overlay = document.getElementById('overlay');
+      const uid = () => { if (globalThis.crypto && crypto.randomUUID) return crypto.randomUUID(); if (globalThis.crypto && crypto.getRandomValues) { const a = new Uint8Array(16); crypto.getRandomValues(a); return Array.from(a, x => x.toString(16).padStart(2, '0')).join(''); } throw new Error('浏览器不支持安全随机编号，请更新浏览器。'); };
+      const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+      function dateText(d) { return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; }
+      const today = () => dateText(new Date());
+      function day(s) { if (typeof s !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(s)) throw new Error('日期格式无效'); const [y, m, d] = s.split('-').map(Number); if (y < 1900 || y > 2200) throw new Error('日期年份须在 1900—2200 之间'); const dt = new Date(y, m - 1, d, 12); if (dateText(dt) !== s) throw new Error('日期无效'); return dt; }
+      function addMonths(s, n) { const d = day(s), last = d.getDate(); d.setDate(1); d.setMonth(d.getMonth() + n); d.setDate(Math.min(last, new Date(d.getFullYear(), d.getMonth() + 1, 0).getDate())); return dateText(d); }
+      function span(a, b) { const x = day(a), y = day(b); return Math.round((Date.UTC(y.getFullYear(), y.getMonth(), y.getDate()) - Date.UTC(x.getFullYear(), x.getMonth(), x.getDate())) / 86400000); }
+      function plusDays(s, n) { const d = day(s); d.setDate(d.getDate() + n); return dateText(d); }
+      function yearNo(start, s) { let n = 1; while (n <= 400 && s >= addMonths(start, n * 12)) n++; return n; }
+      function empty() { return { startDate: null, totalFee: 0, checkins: { A: {}, B: {} }, suspends: {} }; }
+      function validateOp(o) {
+        if (!o || typeof o !== 'object' || typeof o.id !== 'string' || o.id.length < 8 || o.id.length > 100 || !['A', 'B'].includes(o.actor) || !Number.isFinite(o.ts) || !o.payload || typeof o.payload !== 'object') throw new Error('记录结构无效');
+        const p = o.payload;
+        if (o.kind === 'card.set') { day(p.startDate); if (!Number.isFinite(p.totalFee) || p.totalFee < 0 || p.totalFee > 1e9) throw new Error('卡费无效'); }
+        else if (o.kind === 'checkin.set') { day(p.date); if (!['A', 'B'].includes(p.who) || typeof p.present !== 'boolean') throw new Error('打卡记录无效'); }
+        else if (o.kind === 'suspend.add') { day(p.start); day(p.end); if (p.end <= p.start || span(p.start, p.end) > MAX_DAYS) throw new Error('停卡日期无效'); if (typeof p.recordId !== 'string' || p.recordId.length > 100) throw new Error('停卡编号无效'); }
+        else if (o.kind === 'suspend.delete') { if (typeof p.recordId !== 'string' || p.recordId.length > 100) throw new Error('停卡编号无效'); }
+        else if (o.kind !== 'reset') throw new Error('不支持的记录类型');
+        return { id: o.id, kind: o.kind, actor: o.actor, ts: o.ts, payload: JSON.parse(JSON.stringify(p)) };
+      }
+      function validateOps(list) { if (!Array.isArray(list) || list.length > MAX_OPS) throw new Error('记录数量或格式不支持'); const seen = new Set(); return list.map(validateOp).filter(o => { if (seen.has(o.id)) return false; seen.add(o.id); return true; }); }
+      function union(remote, local) { const ids = new Set(remote.map(o => o.id)); return [...remote, ...local.filter(o => !ids.has(o.id) && ids.add(o.id))]; }
+      function project(ops) { let x = empty(); for (const o of ops) { const p = o.payload; if (o.kind === 'reset') x = empty(); else if (o.kind === 'card.set') { x.startDate = p.startDate; x.totalFee = p.totalFee; } else if (o.kind === 'checkin.set') { if (p.present) x.checkins[p.who][p.date] = true; else delete x.checkins[p.who][p.date]; } else if (o.kind === 'suspend.add') x.suspends[p.recordId] = { id: p.recordId, start: p.start, end: p.end }; else if (o.kind === 'suspend.delete') delete x.suspends[p.recordId]; } return x; }
+      const allOps = () => union(state.cloud, state.pending), current = () => project(allOps());
+      function summary(x) { const sus = Object.values(x.suspends).sort((a, b) => a.start.localeCompare(b.start)); const days = sus.reduce((n, s) => n + span(s.start, s.end), 0); return { sus, days, expire: x.startDate ? plusDays(addMonths(x.startDate, 38), days) : null }; }
+      function businessProblems(x) { if (!x.startDate) return Object.keys(x.checkins.A).length || Object.keys(x.checkins.B).length || Object.keys(x.suspends).length ? ['已有记录但缺少开卡日期'] : []; const r = summary(x), errs = [], counts = {}; if (r.days > MAX_DAYS) errs.push('合并后的停卡总天数超过 183 天'); for (const s of r.sus) { const y = yearNo(x.startDate, s.start); counts[y] = (counts[y] || 0) + 1; if (s.start < x.startDate) errs.push('有停卡早于开卡日期'); if (counts[y] > MAX_YEAR) errs.push(`第 ${y} 卡周期停卡超过 4 次`); } for (let i = 1; i < r.sus.length; i++)if (r.sus[i].start < r.sus[i - 1].end) errs.push('有停卡日期重叠'); for (const u of ['A', 'B']) for (const d of Object.keys(x.checkins[u])) if (d < x.startDate || d > r.expire || d > today()) errs.push('有打卡日期超出当前可操作范围'); return [...new Set(errs)]; }
+      function op(kind, payload) { return { id: uid(), kind, actor: state.prefs.user, ts: Date.now(), payload }; }
+      function toast(s) { const el = document.getElementById('toast'); el.textContent = s; el.hidden = false; clearTimeout(toastTimer); toastTimer = setTimeout(() => el.hidden = true, 4200); }
+      function saveState(next) { const snapshot = JSON.parse(JSON.stringify(next)); const work = persistQueue.catch(() => { }).then(() => new Promise((resolve, reject) => { if (!db) return reject(new Error('本机存储不可用，未保存修改。请在正常浏览器中打开并允许网站存储。')); let tx; try { tx = db.transaction(STORE, 'readwrite'); tx.objectStore(STORE).put(snapshot, 'main'); tx.oncomplete = resolve; tx.onerror = () => reject(new Error('本机保存失败：存储空间不足或网站存储被禁用。')); tx.onabort = () => reject(new Error('本机保存被中止，修改未确认。')); } catch (e) { reject(e); } })); persistQueue = work; return work; }
+      function transact(fn) { const task = editQueue.catch(() => { }).then(async () => { const next = JSON.parse(JSON.stringify(state)); const result = fn(next); await saveState(next); state = next; return result; }); editQueue = task; return task; }
+      async function addOperations(ops, strict = true) { ops = validateOps(ops); await transact(next => { next.pending = union(next.pending, ops).filter(o => !next.cloud.some(c => c.id === o.id)); const combined = union(next.cloud, next.pending); if (combined.length > MAX_OPS) throw new Error('操作历史已达上限，请先备份，不要清空待同步记录。'); if (strict) { const errs = businessProblems(project(combined)); if (errs.length) throw new Error(errs.join('；')); } }); render(); scheduleSync(); }
+      function canSync() { return !!(token && state.config.owner && state.config.repo); }
+      function deploymentOK() { return location.protocol === 'https:' && location.hostname.endsWith('.github.io'); }
+      function syncLine() { if (!durable) return '本机存储不可用：暂不能修改记录'; if (syncing) return '正在合并同步…'; if (!canSync()) return `仅保存在本机${state.pending.length ? ' · ' + state.pending.length + ' 项待同步' : ''}`; if (syncMessage) return syncMessage; return state.pending.length ? `已保存在本机 · ${state.pending.length} 项待同步` : '已同步' + (lastSync ? ' · ' + lastSync : ''); }
+      function render() {
+        const x = current(), r = summary(x), u = state.prefs.user, theme = state.prefs.theme; document.documentElement.classList.toggle('dark', theme === 'dark' || theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches); app.setAttribute('aria-busy', String(!ready));
+        const count = w => Object.keys(x.checkins[w]).length, month = w => Object.keys(x.checkins[w]).filter(d => d.slice(0, 7) === today().slice(0, 7)).length;
+        let html = `<header class="top-bar"><h1 class="app-heading">游泳打卡记录</h1><div class="top-tools"><div class="top-actions"><button class="plain" data-action="settings" aria-label="GitHub 设置">GitHub 设置</button><button class="plain" data-action="sync" ${!canSync() || syncing || !durable ? 'disabled' : ''}>${syncing ? '同步中' : '同步'}</button></div><div class="top-status" role="status"><span class="status-dot ${canSync() && !state.pending.length && !syncMessage && !syncing ? 'ok' : ''}"></span><span>${esc(syncLine())}</span></div></div></header>`;
+        if (!durable) html += '<div class="notice">本机记录暂时无法保存，请检查浏览器存储权限。已有记录未被清空。</div>';
+        html += `<div class="card row-between"><button class="plain user-button" data-action="user">${NAMES[u]} ⇄</button><button class="plain" data-action="theme">外观：${{ auto: '跟随系统', dark: '深色', light: '浅色' }[theme]}</button></div>`;
+        if (!x.startDate) html += `<div class="card"><div class="section-title">先录入开卡信息</div><p class="subtle">有效期按原规则：38 个月，再加停卡天数。卡费按每人填写。</p><button class="btn btn-primary" data-action="card" ${!durable ? 'disabled' : ''}>录入开卡信息</button></div>`;
+        else {
+          html += `<div class="card"><div class="stat-grid"><div class="stat-item"><div>累计打卡</div><div>${count(u)} 次</div></div><div class="stat-item"><div>本月打卡</div><div>${month(u)} 次</div></div><div class="stat-item"><div>每次折算</div><div>${count(u) && x.totalFee ? Math.round(x.totalFee / count(u)) + ' 元' : '—'}</div></div></div></div><div class="action-row"><button class="btn btn-primary btn-round big-main" data-action="today" ${!durable || today() < x.startDate || today() > r.expire ? 'disabled' : ''}>🏊 ${x.checkins[u][today()] ? '已打卡' : '打卡'}</button><button class="btn btn-warning btn-round small-side" data-action="double" ${!durable || today() < x.startDate || today() > r.expire ? 'disabled' : ''}>👥 双人打卡</button></div>`;
+          if (today() > r.expire) html += '<div class="notice">卡片已到期。到期日当天仍可打卡。</div>';
+          const y = viewMonth.getFullYear(), m = viewMonth.getMonth(), length = new Date(y, m + 1, 0).getDate();
+          html += `<div class="card"><div class="section-title">日历 · 点击日期补卡 / 删除</div><div class="cal-nav"><button data-action="prev" aria-label="上个月">←</button><strong>${y} 年 ${m + 1} 月</strong><button data-action="next" aria-label="下个月">→</button></div><div class="cal-header">${['日', '一', '二', '三', '四', '五', '六'].map(s => '<div>' + s + '</div>').join('')}</div><div class="calendar">${'<div></div>'.repeat(new Date(y, m, 1).getDay())}`;
+          for (let i = 1; i <= length; i++) { const ds = dateText(new Date(y, m, i)), a = !!x.checkins.A[ds], b = !!x.checkins.B[ds], enabled = durable && ds >= x.startDate && ds <= today() && ds <= r.expire; html += `<button class="cal-day ${a && b ? 'both' : a ? 'nicole' : b ? 'ice' : ''} ${enabled ? 'clickable' : 'disabled'} ${ds === today() ? 'today' : ''}" data-action="day" data-date="${ds}" ${enabled ? '' : 'disabled'} aria-label="${ds}，${a ? 'Nicole 已打卡，' : ''}${b ? '冰淇淋已打卡，' : ''}操作 ${NAMES[u]}">${i}</button>`; }
+          html += `</div><div class="legend subtle"><span><i style="background:#2584ff"></i>Nicole</span><span><i style="background:#ff69b4"></i>冰淇淋</span></div></div><div class="card"><div class="row-between"><div class="section-title">停卡记录</div><button class="btn btn-warning btn-sm" data-action="suspend" ${!durable ? 'disabled' : ''}>新增停卡</button></div><p class="subtle">已用 ${r.days} / ${MAX_DAYS} 天（6个月） · 每年最多停卡 4 次</p>${r.sus.length ? r.sus.map(s => `<div class="suspend-row"><div>${esc(s.start)} → ${esc(s.end)}<div class="subtle">${span(s.start, s.end)} 天 · 第 ${yearNo(x.startDate, s.start)} 卡周期</div></div><button class="plain" data-action="delete-suspend" data-id="${esc(s.id)}" ${!durable ? 'disabled' : ''}>删除</button></div>`).join('') : '<p class="subtle">暂无停卡记录</p>'}</div><div class="card"><div class="info-line">Nicole ${count('A')} 次 / 冰淇淋 ${count('B')} 次</div><div class="info-line">有效期：${esc(x.startDate)} — ${esc(r.expire)}</div><div class="info-line">已开卡 ${Math.max(0, span(x.startDate, today()))} 天 · 剩余 ${Math.max(0, span(today(), r.expire))} 天</div><div class="info-line">每人卡费：${x.totalFee} 元 · 双人总额 ${x.totalFee * 2} 元</div><button class="plain" data-action="card" ${!durable ? 'disabled' : ''}>编辑开卡信息</button></div>`;
+          const problems = businessProblems(x); if (problems.length) html += `<div class="notice">合并后需要检查：${esc(problems.join('；'))}。请先导出备份，再修改相应记录。本机记录未被自动删除。</div>`;
+        }
+        if (!x.startDate) html += '<button class="plain first-help" data-action="help">使用说明</button>';
+        html += `<div class="card footer-actions"><button class="btn btn-sm btn-warning" data-action="import" ${!durable ? 'disabled' : ''}>📥导入JSON</button><button class="btn btn-sm btn-danger" data-action="reset" ${!durable ? 'disabled' : ''}>重置数据</button><button class="btn btn-sm btn-green" data-action="export">📤导出记录</button></div>`;
+        app.innerHTML = html;
+      }
+      function closeModal() { overlay.innerHTML = ''; modal = null; if (returnFocus && returnFocus.isConnected) returnFocus.focus(); }
+      function showModal(title,body,buttons='',handler=null,options={}){returnFocus=document.activeElement;modal={handler};overlay.innerHTML=`<div class="modal-mask"><section class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modal-title"><h2 id="modal-title" ${options.showTitle===false?'hidden':''}>${esc(title)}</h2>${body}<div id="modal-error" class="form-error" role="alert"></div><div class="modal-actions ${options.stacked?'user-choice-actions':''}">${options.showClose===false?'':'<button class="plain" data-modal="cancel">关闭</button>'}${buttons}</div></section></div>`;const first=overlay.querySelector('input:not([type=checkbox]),textarea,select,button');if(first)first.focus();}
+      const confirmButton = (s = '确认', danger = false) => `<button class="btn ${danger ? 'btn-danger' : 'btn-primary'}" data-modal="confirm">${esc(s)}</button>`;
+      function confirmAction(title, body, fn, danger = false) { showModal(title, body, confirmButton(danger ? '确认删除' : '确认', danger), async () => { await fn(); closeModal(); }); }
+      function configModal() {
+        const c = state.config; showModal('GitHub 设置', `<label>GitHub 用户名<input id="cfg-owner" autocomplete="off" value="${esc(c.owner)}" placeholder="仓库拥有者的用户名"></label><label>私有数据仓库名称<input id="cfg-repo" autocomplete="off" value="${esc(c.repo)}" placeholder="例如 swim-private-data"></label><label>分支<input id="cfg-branch" autocomplete="off" value="${esc(c.branch)}"></label><label>GitHub Token<input id="cfg-token" type="password" autocomplete="new-password" spellcheck="false" placeholder="${token ? '已配置；留空保持不变' : '首次使用请在此输入'}"></label><label class="check-label"><input id="cfg-remember" type="checkbox" ${state.savedToken ? 'checked' : ''}>记住此设备上的 Token</label>`, `${token ? '<button class="plain" data-modal="forget">移除本机 Token</button>' : ''}${confirmButton('保存设置')}`, async () => {
+          const owner = document.getElementById('cfg-owner').value.trim(), repo = document.getElementById('cfg-repo').value.trim(), branch = document.getElementById('cfg-branch').value.trim(), entered = document.getElementById('cfg-token').value.trim(), remember = document.getElementById('cfg-remember').checked;
+          if (!/^[A-Za-z0-9-]{1,39}$/.test(owner) || !/^[A-Za-z0-9_.-]{1,100}$/.test(repo) || !branch || branch.length > 200 || /[\s\x00-\x1f]/.test(branch)) throw new Error('请填写有效的用户名、仓库名和分支。');
+          const nextToken = entered || token; if (!nextToken || /\s/.test(nextToken)) throw new Error('请填写有效 Token。'); if (syncing) throw new Error('正在同步，请完成后修改设置。');
+          await transact(next => { const changed = next.config.owner !== owner || next.config.repo !== repo || next.config.branch !== branch; if (changed) { next.pending = union(next.cloud, next.pending); next.cloud = []; } next.config = { owner, repo, branch }; next.savedToken = remember ? nextToken : ''; }); token = nextToken; syncMessage = ''; lastSync = ''; statusKind = ''; closeModal(); render(); toast('设置已保存在本机'); scheduleSync();
+        });
+      }
+      function makeExport() { const operations = allOps(), x = current(); return JSON.stringify({ schemaVersion: 2, exportedAt: new Date().toISOString(), ops: operations, projection: { startDate: x.startDate, totalFee: x.totalFee, users: { A: { checkins: Object.keys(x.checkins.A).sort().map(date => ({ date })) }, B: { checkins: Object.keys(x.checkins.B).sort().map(date => ({ date })) } }, suspendRecords: summary(x).sus }, pendingOperationIds: state.pending.map(o => o.id) }, null, 2); }
+      function exportModal() {
+        const txt = JSON.stringify(JSON.parse(makeExport()), null, 2)
+        showModal(
+          '导出本机完整备份',
+          `
+            <p class="subtle">
+              包含两人的记录和未上传修改，不包含 Token 或仓库设置。
+              下载失败可复制下方文本，另存为 .json 文件。
+            </p>
+            <textarea id="backup-text"
+                      readonly
+                      aria-label="完整备份文本"></textarea>
+          `,
+          `
+            <button class="plain" data-modal="select-backup">全选</button>
+            <button class="btn btn-green" data-modal="download">下载</button>
+            ${navigator.share
+            ? '<button class="btn btn-primary" data-modal="share">分享</button>'
+            : ''}
+          `
+        )
+
+        document.getElementById('backup-text').value = txt
+        modal.backup = txt
+      }
+      function downloadBackup(txt) { const blob = new Blob([txt], { type: 'application/json;charset=utf-8' }), url = URL.createObjectURL(blob), a = document.createElement('a'); a.href = url; a.download = 'swim-backup-' + today() + '.json'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 60000); toast('已请求下载；若浏览器未保存，请使用备份文本'); }
+      async function shareBackup(txt) { if (!navigator.share) throw new Error('浏览器不支持系统分享，请下载或复制文本。'); const file = new File([txt], 'swim-backup-' + today() + '.json', { type: 'application/json' }); if (!navigator.canShare || !navigator.canShare({ files: [file] })) throw new Error('浏览器不支持分享 JSON 文件，请下载或复制文本。'); try { await navigator.share({ files: [file], title: '游泳打卡备份' }); } catch (e) { if (e.name !== 'AbortError') throw new Error('分享未完成，请下载或复制备份文本。'); } }
+      function importOps(raw) { const parsed = JSON.parse(raw); if (parsed.schemaVersion === 2) return validateOps(parsed.ops); if (!parsed || !parsed.users || !parsed.users.A || !parsed.users.B) throw new Error('不是支持的游泳备份格式。'); const list = []; if (parsed.startDate) list.push(op('card.set', { startDate: parsed.startDate, totalFee: Number(parsed.totalFee || 0) })); for (const who of ['A', 'B']) { if (!Array.isArray(parsed.users[who].checkins)) throw new Error('旧版打卡数据格式无效'); for (const item of parsed.users[who].checkins) { let ds = item.date; if (!ds) { if (!Number.isFinite(item.ts)) throw new Error('旧版时间戳无效'); const dt = new Date(item.ts); if (!Number.isFinite(dt.getTime())) throw new Error('旧版日期无效'); ds = dateText(dt); } list.push(op('checkin.set', { who, date: ds, present: true })); } } if (parsed.suspendRecords && !Array.isArray(parsed.suspendRecords)) throw new Error('旧版停卡记录无效'); for (const s of parsed.suspendRecords || []) list.push(op('suspend.add', { recordId: 'legacy-' + s.start + '-' + s.end, start: s.start, end: s.end })); return validateOps(list); }
+      function importModal() {
+        showModal('导入备份并合并', '<p class="subtle">支持旧版和新版 JSON。新版按操作 ID 去重；旧版按人和日期合并，停卡需检查重复。备份的开卡设置及新版删除操作也会生效，不是单纯添加记录。</p><label>选择 JSON 文件<input type="file" id="import-file" accept=".json,application/json,text/plain"></label><label>或粘贴完整 JSON<textarea id="import-text" spellcheck="false"></textarea></label><label class="check-label"><input id="import-agree" type="checkbox" checked>已导出当前备份，同意合并及其中的设置 / 删除操作</label>', confirmButton('导入并合并'), async () => {
+          if (!document.getElementById('import-agree').checked) throw new Error('请先确认已备份，并同意合并。'); const file = document.getElementById('import-file').files[0]; if (file && file.size > MAX_BYTES * 3) throw new Error('备份文件过大。'); const raw = file ? await file.text() : document.getElementById('import-text').value.trim(); if (!raw) throw new Error('请选择文件或粘贴文本。'); const list = importOps(raw); if (!list.length) throw new Error('备份没有可导入的操作。'); await addOperations(list, false); closeModal(); toast('已合并到本机，联网后尝试同步；请检查停卡及开卡设置');
+        });
+      }
+      function cardModal() { const x = current(); showModal(x.startDate ? '编辑开卡信息' : '录入开卡信息', `<label>开卡日期<input type="date" id="card-date" value="${esc(x.startDate || today())}" min="1900-01-01" max="2200-12-31"></label><label>每人卡费（元）<input type="number" id="card-fee" inputmode="decimal" min="0" step="0.01" value="${x.totalFee || ''}" placeholder="每人的卡费，不是双人总额"></label><p class="subtle">有效期按 38 个月加停卡天数计算。修改后会同步给另一台手机。</p>`, confirmButton('保存'), async () => { const startDate = document.getElementById('card-date').value, raw = document.getElementById('card-fee').value; if (raw === '') throw new Error('请填写每人卡费，可填 0。'); day(startDate); const totalFee = Number(raw); await addOperations([op('card.set', { startDate, totalFee })]); closeModal(); toast('开卡信息已保存在本机'); }); }
+      function suspendModal() { showModal('新增停卡', `<label>停卡开始日<input type="date" id="sus-start" value="${today()}"></label><label>恢复日 / 停卡结束日<input type="date" id="sus-end"></label><p class="subtle">天数不能与已有停卡重叠，累计不超过 6 个月，每卡周期不超过 4 次。</p>`, confirmButton('保存停卡'), async () => { const start = document.getElementById('sus-start').value, end = document.getElementById('sus-end').value; day(start); day(end); if (end <= start) throw new Error('结束日必须晚于开始日。'); await addOperations([op('suspend.add', { recordId: uid(), start, end })]); closeModal(); toast('停卡已保存在本机'); }); }
+      function resetModal() { showModal('清空两人的共享记录', '<p>这不是只清空此手机：同步后会清空两个人的开卡、打卡和停卡记录。GitHub 提交历史仍可能保留旧记录。</p><p class="subtle">请先导出备份。清空操作也会进入待同步队列；另一台手机之后上传的离线修改仍可能重新出现。</p><label>输入“清空两人记录”确认<input id="reset-text" autocomplete="off"></label>', confirmButton('清空共享记录', true), async () => { if (document.getElementById('reset-text').value !== '清空两人记录') throw new Error('请输入完整确认文字。'); await addOperations([op('reset', {})], false); closeModal(); toast('清空操作已保存在本机，等待同步'); }); }
+      function helpModal() { showModal('使用说明', `<p><strong>先选自己的名字</strong><br>点击名字可以切换 Nicole / 冰淇淋。打卡前确认当前显示的是你。</p><p><strong>每天打卡</strong><br>点击“今天打卡”记录一次；每人每天最多一次。“双人打卡”给两人各记录一次，已经打卡的人不会重复增加。</p><p><strong>补卡与删除</strong><br>点击日历中的日期，为当前选中的人补卡或删除打卡，确认后生效。只能操作开卡日至今天之间、且在卡片有效期内的日期。蓝色代表 Nicole，粉色代表冰淇淋，双色代表两人都已打卡。</p><p><strong>停卡与有效期</strong><br>基础有效期为开卡后 38 个月，到期日当天仍可打卡。停卡天数会顺延有效期，按恢复日减开始日计算。累计最多 183 天，从开卡日起每个 12 个月周期最多 4 次，停卡日期不能重叠。删除停卡后，有效期会回退。</p><p><strong>查看费用和统计</strong><br>卡费填写每人的费用。每次折算为该人的卡费除以累计打卡次数，不是退款金额。本月次数按当前自然月统计。</p><p><strong>同步与备份</strong><br>修改先保存在手机，标题右侧可以查看同步状态。显示待同步时不要清理网页数据；联网后点击“同步”或下次打开网页再尝试。用“📤导出记录”保留备份，用“📥导入JSON”恢复并合并记录。</p><p><strong>重置需谨慎</strong><br>“重置数据”清空的是两人的共享记录，同步后另一台手机也会受到影响。先导出备份，再按提示确认。</p>`); }
+      class SyncError extends Error { constructor(message, kind = 'retry') { super(message); this.kind = kind; } }
+      function encode64(s) { const bytes = new TextEncoder().encode(s); let binary = ''; for (let i = 0; i < bytes.length; i += 8192)binary += String.fromCharCode(...bytes.subarray(i, i + 8192)); return btoa(binary); }
+      function decode64(s) { const binary = atob(s.replace(/\s/g, '')); return new TextDecoder('utf-8', { fatal: true }).decode(Uint8Array.from(binary, c => c.charCodeAt(0))); }
+      async function request(path, method = 'GET', body = null) { const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 15000); try { const res = await fetch('https://api.github.com' + path, { method, headers: { 'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28', ...(body ? { 'Content-Type': 'application/json' } : {}) }, body: body ? JSON.stringify(body) : undefined, cache: 'no-store', signal: controller.signal }); let value = null; try { value = await res.json(); } catch (e) { } return { status: res.status, ok: res.ok, value, retryAfter: res.headers.get('retry-after') }; } catch (e) { throw new SyncError(e.name === 'AbortError' ? '网络超时，修改仍保存在本机' : '无法连接 GitHub，修改仍保存在本机'); } finally { clearTimeout(timer); } }
+      function failResponse(res) { if (res.status === 401) throw new SyncError('Token 无效或已过期，请在设置中更换', 'auth'); if (res.status === 403 || res.status === 429) throw new SyncError('GitHub 拒绝请求或已限流，请检查 Contents 权限，稍后手动重试', 'auth'); if (res.status === 404) throw new SyncError('找不到仓库或分支，请检查名称、Token 仓库授权及分支初始化', 'config'); throw new SyncError('GitHub 请求失败（' + res.status + '），待同步修改已保留'); }
+      function parseCloud(raw) { let data; try { data = JSON.parse(raw); } catch (e) { throw new SyncError('云端 JSON 无法解析，未覆盖；请检查或恢复备份', 'data'); } if (data.schemaVersion !== 2 || !Array.isArray(data.ops)) throw new SyncError('云端文件不是新版同步格式，未覆盖；请先使用导入备份功能', 'data'); try { return validateOps(data.ops); } catch (e) { throw new SyncError('云端数据校验失败，未覆盖：' + e.message, 'data'); } }
+      async function readCloud(base, branch) { const res = await request(base + '/contents/' + FILE + '?ref=' + encodeURIComponent(branch)); if (res.status === 404) { const check = await request(base + '/branches/' + encodeURIComponent(branch)); if (!check.ok) failResponse(check); return { ops: [], sha: null }; } if (!res.ok) failResponse(res); if (!res.value || res.value.type !== 'file' || res.value.encoding !== 'base64' || !res.value.content || res.value.size > MAX_BYTES || !res.value.sha) throw new SyncError('云端数据文件过大或格式不支持，未覆盖', 'data'); let raw; try { raw = decode64(res.value.content); } catch (e) { throw new SyncError('云端文件编码无效，未覆盖', 'data'); } return { ops: parseCloud(raw), sha: res.value.sha }; }
+      let approvedConflict = '';
+      function settingsConflict(remote, submitted) { const local = submitted.filter(o => o.kind === 'card.set'), baseIds = new Set(state.cloud.map(o => o.id)), remoteChanges = remote.filter(o => (o.kind === 'card.set' || o.kind === 'reset') && !baseIds.has(o.id) && !submitted.some(p => p.id === o.id)); if (!local.length || !remoteChanges.length) return ''; const a = local[local.length - 1].payload, x = project(remote); if (a.startDate === x.startDate && a.totalFee === x.totalFee) return ''; return JSON.stringify({ local: local.map(o => o.id), remote: remoteChanges.map(o => o.id) }); }
+      function scheduleSync() { clearTimeout(syncTimer); if (canSync() && durable && deploymentOK()) syncTimer = setTimeout(() => syncNow(), 900); }
+      async function syncNow() {
+        if (syncing) return; if (!durable) return toast('本机存储不可用，不能安全同步'); if (!canSync()) return configModal(); if (!deploymentOK()) return toast('请部署到 HTTPS GitHub Pages 后再同步'); if (!navigator.onLine) { syncMessage = '离线 · 修改保存在本机，联网后重试'; render(); return; } clearTimeout(retryTimer); syncing = true; syncMessage = ''; render();
+        let needRetry = false;
+        try {
+          const c = { ...state.config }, base = '/repos/' + encodeURIComponent(c.owner) + '/' + encodeURIComponent(c.repo); await editQueue.catch(() => { });
+          const repoCheck = await request(base); if (!repoCheck.ok) failResponse(repoCheck); if (!repoCheck.value || repoCheck.value.private !== true) throw new SyncError('数据仓库必须设为私有；未上传任何记录。请使用单独的私有仓库', 'config');
+          let completed = false;
+          for (let attempt = 0; attempt < 3; attempt++) {
+            const remote = await readCloud(base, c.branch); await editQueue.catch(() => { }); const remoteIds = new Set(remote.ops.map(o => o.id)); const submitted = state.pending.filter(o => !remoteIds.has(o.id)); const conflict = settingsConflict(remote.ops, submitted);
+            if (conflict && conflict !== approvedConflict) { showModal('开卡信息发生同步冲突', `<p>另一台手机已修改共享开卡信息，你的本机也有待上传修改。</p><p class="subtle">云端：${esc(project(remote.ops).startDate || '未开卡')}，每人 ${project(remote.ops).totalFee} 元<br>本机：${esc(current().startDate || '未开卡')}，每人 ${current().totalFee} 元</p><p>关闭将保留本机修改，不自动覆盖。确认后提交本机开卡设置；期间若云端再次变化，会重新确认。</p>`, confirmButton('确认提交本机设置'), async () => { approvedConflict = conflict; closeModal(); syncMessage = ''; await syncNow(); }); throw new SyncError('开卡设置冲突：请确认后继续同步', 'conflict'); }
+            await transact(next => { next.cloud = remote.ops; next.pending = next.pending.filter(o => !remoteIds.has(o.id)); });
+            const merged = union(remote.ops, submitted); let written = false;
+            if (submitted.length) { const problems = businessProblems(project(merged)); if (problems.length) throw new SyncError('合并后需要检查：' + problems.join('；') + '。请先备份并修正，本机修改已保留', 'data'); const raw = JSON.stringify({ schemaVersion: 2, updatedAt: new Date().toISOString(), ops: merged }, null, 2); if (merged.length > MAX_OPS || new TextEncoder().encode(raw).length > MAX_BYTES) throw new SyncError('云端操作历史达到安全上限，请先导出备份', 'data'); const result = await request(base + '/contents/' + FILE, 'PUT', { message: 'Swim sync: ' + submitted.length + ' operation(s)', branch: c.branch, content: encode64(raw), ...(remote.sha ? { sha: remote.sha } : {}) }); if (result.status === 409 || result.status === 422) { await new Promise(resolve => setTimeout(resolve, 400 * (attempt + 1))); continue; } if (!result.ok) failResponse(result); written = true; }
+            const acceptedIds = new Set((written ? merged : remote.ops).map(o => o.id)); await transact(next => { next.cloud = written ? merged : remote.ops; next.pending = next.pending.filter(o => !acceptedIds.has(o.id)); }); lastSync = new Date().toLocaleTimeString('zh-CN', { hour: '2-digit', minute: '2-digit' }); syncMessage = ''; approvedConflict = ''; completed = true; break;
+          }
+          if (!completed) throw new SyncError('双方同时更新或分支拒绝写入，已保留本机修改，请稍后重试');
+        } catch (e) { syncMessage = e.message || '同步失败，修改已保存在本机'; statusKind = e.kind || 'retry'; needRetry = statusKind === 'retry'; }
+        finally { syncing = false; render(); if (needRetry && document.visibilityState === 'visible') retryTimer = setTimeout(() => syncNow(), 60000); else if (!syncMessage && state.pending.length) scheduleSync(); }
+      }
+      async function handleAction(button) {
+        const a = button.dataset.action, x = current(), u = state.prefs.user;
+        if (a === 'settings') return configModal(); if (a === 'sync') return syncNow(); if (a === 'export') return exportModal(); if (a === 'import') return importModal(); if (a === 'help') return helpModal(); if (a === 'card') return cardModal(); if (a === 'suspend') return suspendModal(); if (a === 'reset') return resetModal();
+        if (a === 'user') { return showModal('当前操作成员', '', Object.entries(NAMES).map(([key, name]) => <button class="btn btn-primary" data-modal="user" data-user="${key}"> ${name} </button>).join(''), null, { showTitle: false, showClose: false, stacked: true }) }
+        if (a === 'theme') { await transact(next => { next.prefs.theme = { auto: 'dark', dark: 'light', light: 'auto' }[next.prefs.theme]; }); render(); return; }
+        if (a === 'prev' || a === 'next') { viewMonth.setMonth(viewMonth.getMonth() + (a === 'prev' ? -1 : 1)); render(); return; }
+        if (a === 'today' || a === 'double') { const people = a === 'double' ? ['A', 'B'] : [u], ops = people.filter(w => !x.checkins[w][today()]).map(w => op('checkin.set', { who: w, date: today(), present: true })); if (!ops.length) return toast('今天已经打卡'); await addOperations(ops); return toast('已保存在本机' + (canSync() ? '，正在尝试同步' : '')); }
+        if (a === 'day') { const date = button.dataset.date, present = !x.checkins[u][date]; return confirmAction(present ? '补卡' : '删除打卡', `<p>${esc(NAMES[u])} · ${esc(date)}</p><p>${present ? '确认添加这一天的打卡？' : '确认删除这一天的打卡？删除也会同步给另一台手机。'}</p>`, async () => { await addOperations([op('checkin.set', { who: u, date, present })], present); toast(present ? '补卡已保存' : '删除已保存'); }, !present); }
+        if (a === 'delete-suspend') { const id = button.dataset.id, s = x.suspends[id]; if (!s) return; return confirmAction('删除停卡', `<p>${esc(s.start)}  →  ${esc(s.end)}</p><p>删除后有效期自动回退。删除时检查是否有打卡超出新有效期。</p>`, async () => { await addOperations([op('suspend.delete', { recordId: id })], false); toast('停卡删除已保存'); }, true); }
+      }
+      document.addEventListener('click', async event => {
+        const mb = event.target.closest('[data-modal]'); if (mb) {
+          const action = mb.dataset.modal; if (action === 'cancel') return closeModal(); if (action === 'select-backup') { const el = document.getElementById('backup-text'); el.focus(); el.select(); el.setSelectionRange(0, el.value.length); return; } if (action === 'download') return downloadBackup(modal.backup);
+          if (action === 'share') { try { await shareBackup(modal.backup); } catch (e) { document.getElementById('modal-error').textContent = e.message; } return; }
+          mb.disabled = true; try { if (action === 'confirm' && modal.handler) await modal.handler(); else if (action === 'user') { await transact(next => next.prefs.user = mb.dataset.user); closeModal(); render(); } else if (action === 'forget') { if (syncing) throw new Error('请等同步结束后再移除 Token。'); await transact(next => next.savedToken = ''); token = ''; syncMessage = ''; closeModal(); render(); toast('本机 Token 已移除，记录未删除'); } } catch (e) { const el = document.getElementById('modal-error'); if (el) el.textContent = e.message || '操作失败'; } finally { if (mb.isConnected) mb.disabled = false; } return;
+        }
+        const b = event.target.closest('[data-action]'); if (b && !b.disabled) { try { await handleAction(b); } catch (e) { toast(e.message || '操作失败，原记录未清空'); } }
+      });
+      document.addEventListener('keydown', e => { if (!modal) return; if (e.key === 'Escape') { e.preventDefault(); closeModal(); } if (e.key === 'Tab') { const items = Array.from(overlay.querySelectorAll('button:not(:disabled),input:not(:disabled),textarea,select,[tabindex="0"]')); if (!items.length) return; const first = items[0], last = items[items.length - 1]; if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); } else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); } } });
+      window.addEventListener('online', () => { syncMessage = ''; scheduleSync(); }); window.addEventListener('offline', () => { syncMessage = '离线 · 修改保存在本机'; render(); }); document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') scheduleSync(); else clearTimeout(retryTimer); });
+      const media = window.matchMedia('(prefers-color-scheme: dark)'); if (media.addEventListener) media.addEventListener('change', () => ready && render()); else if (media.addListener) media.addListener(() => ready && render());
+      async function init() { try { if (!globalThis.indexedDB) throw new Error('当前环境不支持 IndexedDB'); db = await new Promise((resolve, reject) => { const req = indexedDB.open(DB_NAME, 1); req.onupgradeneeded = () => { if (!req.result.objectStoreNames.contains(STORE)) req.result.createObjectStore(STORE); }; req.onsuccess = () => resolve(req.result); req.onerror = () => reject(new Error('打开本机存储失败')); req.onblocked = () => reject(new Error('存储被另一页面阻塞，请关闭其他标签后重试')); }); db.onversionchange = () => { db.close(); durable = false; render(); }; const saved = await new Promise((resolve, reject) => { const tx = db.transaction(STORE, 'readonly'), req = tx.objectStore(STORE).get('main'); req.onsuccess = () => resolve(req.result); req.onerror = () => reject(new Error('本机读取失败')); }); if (saved) { state = { ...state, ...saved }; state.cloud = validateOps(saved.cloud || []); state.pending = validateOps(saved.pending || []); if (!['A', 'B'].includes(state.prefs.user)) state.prefs.user = 'A'; if (!['auto', 'light', 'dark'].includes(state.prefs.theme)) state.prefs.theme = 'auto'; } if (!state.device) state.device = uid(); await saveState(state); token = state.savedToken || ''; durable = true; } catch (e) { durable = false; syncMessage = '本机数据未加载：' + e.message; console.warn('Local tracker initialization failed; stored records were not cleared.'); } ready = true; render(); scheduleSync(); }
+      init();
+    })();
+  </script>
+  <script type="text/plain" id="previous-version">
 // ========== 配置 ==========
 const USER_A = "Nicole"
 const USER_B = "冰淇淋"
@@ -576,4 +1288,5 @@ function render(){
 render()
 </script>
 </body>
+
 </html>
